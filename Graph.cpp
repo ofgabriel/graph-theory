@@ -106,6 +106,30 @@ int Graph::getGraphSize() {
     return length_;
 }
 
+int Graph::getGraphMinimumDegree() {
+    int minimumDegree = UINT_MAX;
+
+    for (int i = 0; i < getGraphSize(); i++) {
+        if (getVerticesDegrees()[i] < minimumDegree) {
+            minimumDegree = getVerticesDegrees()[i];
+        }
+    }
+
+    return minimumDegree;
+}
+
+int Graph::getGraphMaximumDegree() {
+    int maximumDegree = UINT_MAX;
+
+    for (int i = 0; i < getGraphSize(); i++) {
+        if (getVerticesDegrees()[i] > maximumDegree) {
+            maximumDegree = getVerticesDegrees()[i];
+        }
+    }
+
+    return maximumDegree;
+}
+
 vector<int> Graph::getVerticesDegrees() {
     return verticesDegrees_;
 }

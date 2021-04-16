@@ -21,6 +21,8 @@ namespace Lib
         void loadGraphFromFilePath(string filePath);
 
         int getGraphSize();
+        int getGraphMinimumDegree();
+        int getGraphMaximumDegree();
         vector<int> getVerticesDegrees();
 
         void breadthFirstSearch(
