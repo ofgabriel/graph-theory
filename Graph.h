@@ -10,6 +10,7 @@ namespace Lib
 
         virtual void addVertex(int index) = 0;
         virtual void setupGraphWithEdges(istream& file) = 0;
+        virtual int getNeighbor(int vertexIndex, int neighborId) = 0;
 
         void setupGraphWithSize(int graphSize);
     public:
@@ -18,5 +19,11 @@ namespace Lib
         void loadGraphFromFilePath(string filePath);
 
         int getGraphSize();
+
+        void breadthFirstSearch(
+            int initialVertexIndex,
+            vector<int>& parent,
+            vector<int>& level
+        );
     };
 }
