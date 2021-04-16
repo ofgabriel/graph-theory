@@ -10,9 +10,9 @@ void Graph::loadGraphFromFilePath(string filePath) {
     ifstream file;
 
     file.open(filePath);
-    file >> length_;
+    file >> graphSize_;
 
-    setupGraphWithSize(length_);
+    setupGraphWithSize(graphSize_);
     setupGraphWithEdges(file);
 }
 
@@ -103,7 +103,11 @@ void Graph::depthFirstSearch(
 }
 
 int Graph::getGraphSize() {
-    return length_;
+    return graphSize_;
+}
+
+int Graph::getGraphEdgesNumber() {
+    return graphEdgesNumber_;
 }
 
 int Graph::getGraphMinimumDegree() {
@@ -128,6 +132,30 @@ int Graph::getGraphMaximumDegree() {
     }
 
     return maximumDegree;
+}
+
+int Graph::getGraphMeanDegree() {
+    if (getGraphSize() == 0) {
+        return 0;
+    }
+
+    return (float)getGraphEdgesNumber() / (float)getGraphSize();
+}
+
+int Graph::getGraphMedianDegree() {
+    int size = getVerticesDegrees().size();
+
+    if (size == 0) {
+        return 0;
+    }
+
+    vector<int> degrees(getVerticesDegrees());
+
+    if (size % 2 == 0) {
+        return (degrees[size / 2 - 1] + degrees[size / 2]) / 2;
+    }
+
+    return degrees[size / 2];
 }
 
 vector<int> Graph::getVerticesDegrees() {

@@ -16,13 +16,17 @@ namespace Lib
 
         void setupGraphWithSize(int graphSize);
     public:
-        int length_;
+        int graphSize_;
+        int graphEdgesNumber_;
 
         void loadGraphFromFilePath(string filePath);
 
         int getGraphSize();
+        int getGraphEdgesNumber();
         int getGraphMinimumDegree();
         int getGraphMaximumDegree();
+        int getGraphMeanDegree();
+        int getGraphMedianDegree();
         vector<int> getVerticesDegrees();
 
         void breadthFirstSearch(
