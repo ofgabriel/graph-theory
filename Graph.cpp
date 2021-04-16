@@ -33,7 +33,7 @@ void Graph::breadthFirstSearch(
     vector<int>& parent,
     vector<int>& level
 ) {
-    if (initialVertexIndex > length_) {
+    if (initialVertexIndex > getGraphSize()) {
         return;
     }
 
@@ -63,6 +63,49 @@ void Graph::breadthFirstSearch(
     }
 }
 
+void Graph::depthFirstSearch(
+    int initialVertexIndex,
+    vector<int>& parent,
+    vector<int>& level
+) {
+    if (initialVertexIndex > getGraphSize()) {
+        return;
+    }
+
+	vector<bool> explored = vector<bool>(getGraphSize(), false);
+	stack<int> stack;
+
+	stack.push(initialVertexIndex);
+
+	parent[initialVertexIndex - 1] = 0;
+	level[initialVertexIndex - 1] = 0;
+
+	while (!stack.empty()) {
+		int vertexId = stack.top();
+		stack.pop();
+
+		if (explored[vertexId - 1]) {
+			continue;
+		}
+
+		explored[vertexId - 1] = true;
+		for (int i = 0; i < getVerticesDegrees()[vertexId - 1]; i++) {
+			int neighborId = getNeighbor(vertexId, i);
+
+			if (parent[neighborId - 1] == UINT_MAX) {
+				parent[neighborId - 1] = vertexId;
+				level[neighborId - 1] = level[vertexId - 1] + 1;
+			}
+
+			stack.push(neighborId);
+		}
+	}
+}
+
 int Graph::getGraphSize() {
     return length_;
+}
+
+vector<int> Graph::getVerticesDegrees() {
+    return verticesDegrees_;
 }
