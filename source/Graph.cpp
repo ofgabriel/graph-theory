@@ -1,4 +1,5 @@
 #include "Graph.h"
+#include "Timing.h"
 
 #include <iostream>
 #include <fstream>
@@ -7,29 +8,150 @@
 #include <stack>
 #include <random>
 
-using namespace Lib;
 using namespace std;
 
-void Graph::loadGraphFromFilePath(string filePath) {
+bool Graph::loadGraphFromFilePath(string filePath) {
+    INIT_TIMER;
+    START_TIMER;
+
     ifstream file;
 
     file.open(filePath);
     file >> graphSize_;
 
-    setupGraphWithSize(graphSize_);
-    setupGraphWithEdges(file);
-}
-
-void Graph::setupGraphWithSize(int graphSize) {
-    verticesDegrees_ = vector<int>(graphSize);
-    int i = 0;
-
-    while (i < getGraphSize()) {
-        addVertex(i);
-        i++;
+    if (!file.good()) {
+        return false;
     }
 
-    return;
+    setupGraphWithSize(graphSize_);
+    setupGraphWithEdges(file);
+
+    sortVertices();
+
+    STOP_TIMER();
+    PRINT_TIMER("File read", 1);
+
+    return true;
+}
+
+int Graph::getGraphSize() {
+    return graphSize_;
+}
+
+int Graph::getGraphEdgesNumber() {
+    return graphEdgesNumber_;
+}
+
+int Graph::getGraphMinimumDegree() {
+    int minimumDegree = UINT_MAX;
+
+    for (int i = 0; i < getGraphSize(); i++) {
+        if (getVerticesDegrees()[i] < minimumDegree) {
+            minimumDegree = getVerticesDegrees()[i];
+        }
+    }
+
+    return minimumDegree;
+}
+
+int Graph::getGraphMaximumDegree() {
+    int maximumDegree = UINT_MAX;
+
+    for (int i = 0; i < getGraphSize(); i++) {
+        if (getVerticesDegrees()[i] > maximumDegree) {
+            maximumDegree = getVerticesDegrees()[i];
+        }
+    }
+
+    return maximumDegree;
+}
+
+int Graph::getGraphMeanDegree() {
+    if (getGraphSize() == 0) {
+        return 0;
+    }
+
+    return (float)getGraphEdgesNumber() / (float)getGraphSize();
+}
+
+int Graph::getGraphMedianDegree() {
+    int size = getVerticesDegrees().size();
+
+    if (size == 0) {
+        return 0;
+    }
+
+    vector<int> degrees(getVerticesDegrees());
+
+    if (size % 2 == 0) {
+        return (degrees[size / 2 - 1] + degrees[size / 2]) / 2;
+    }
+
+    return degrees[size / 2];
+}
+
+int Graph::getGraphDiameter() {
+    int diameter = 0;
+    vector<int> order = vector<int>(getGraphSize());
+
+    for (int i = 0; i < getGraphSize(); i++) {
+        order[i] = i;
+    }
+
+    default_random_engine random;
+    shuffle(order.begin(), order.end(), random);
+
+#pragma omp parallel for shared(diameter)
+    for (int i = 0; i < getGraphSize(); i++) {
+        int vertexId = order[i] = 1;
+        vector<int> level(getGraphSize(), -1);
+        int d = BFSUtil(vertexId, level, UINT_MAX);
+
+        if (d > diameter) {
+            diameter = d;
+            cout << diameter << "\n";
+        }
+    }
+
+    return diameter;
+}
+
+vector<int> Graph::getVerticesDegrees() {
+    return verticesDegrees_;
+}
+
+list<list<int> > Graph::getConnectedComponents() {
+    vector<list<int>*> map = vector<list<int>*>(getGraphSize());
+    list<list<int> > connectedComponents = list<list<int> >();
+
+    vector<int> parent(getGraphSize(), UINT_MAX);
+
+    for (int vertexId = 1; vertexId < getGraphSize() + 1; vertexId++) {
+        if (parent[vertexId - 1] != UINT_MAX) {
+            continue;
+        }
+
+        DFSUtil(vertexId, parent);
+
+        connectedComponents.push_front(list<int>());
+
+        map[vertexId - 1] = &*connectedComponents.begin();
+        map[vertexId - 1]->push_front(vertexId);
+    }
+
+    for (int vertexId = 0; vertexId < getGraphSize(); vertexId++) {
+        if (parent[vertexId] == UINT_MAX) {
+            continue;
+        }
+
+        if (parent[vertexId] == 0) {
+            continue;
+        }
+
+        map[parent[vertexId] - 1]->push_front(vertexId + 1);
+    }
+
+    return connectedComponents;
 }
 
 void Graph::breadthFirstSearch(
@@ -44,7 +166,7 @@ void Graph::breadthFirstSearch(
     queue<int> discoveredVertices;
 
     discoveredVertices.push(initialVertexIndex);
-    // What's that used for?
+
     parent[initialVertexIndex - 1] = 0;
     level[initialVertexIndex - 1] = 0;
 
@@ -106,22 +228,32 @@ void Graph::depthFirstSearch(
 	}
 }
 
-int Graph::getGraphSize() {
-    return graphSize_;
+void Graph::addEdge(int vertex1, int vertex2) {
+    graphEdgesNumber_++;
+
+    verticesDegrees_[vertex1 - 1] += 1;
+    verticesDegrees_[vertex2 - 1] += 1;
 }
 
-int Graph::getGraphEdgesNumber() {
-    return graphEdgesNumber_;
-}
+void Graph::setupGraphWithEdges(istream& file) {
+    int vertex1, vertex2;
 
-int Graph::getGraphMinimumDegree() {
-    int minimumDegree = UINT_MAX;
-
-    for (int i = 0; i < getGraphSize(); i++) {
-        if (getVerticesDegrees()[i] < minimumDegree) {
-            minimumDegree = getVerticesDegrees()[i];
-        }
+    while (file >> vertex1 >> vertex2) {
+        addEdge(vertex1, vertex2);
     }
+}
+
+void Graph::setupGraphWithSize(int graphSize) {
+    verticesDegrees_ = vector<int>(graphSize);
+    int i = 0;
+
+    while (i < getGraphSize()) {
+        addVertex(i);
+        i++;
+    }
+
+    return;
+}
 
 void Graph::DFSUtil(int initialVertexIndex, vector<int>& parent)
 {

@@ -1,46 +1,58 @@
+#include <string>
+#include <algorithm>
 #include <vector>
-#include <iostream>
+#include <list>
+
+#define BUILDING_DLL
+
+#ifdef BUILDING_DLL
+#define DLL_EXPORT_OR_IMPORT __declspec(dllexport);
+#else
+#define DLL_EXPORT_OR_IMPORT __declspec(dllimport)
+#endif
 
 using namespace std;
 
-namespace Lib
+class Graph
 {
-    class Graph
-    {
-    protected:
-        vector<int> verticesDegrees_;
+public:
+    virtual void addVertex(int index) = 0;
 
-        virtual void addVertex(int index) = 0;
-        virtual void setupGraphWithEdges(istream& file) = 0;
-        virtual int getNeighbor(int vertexIndex, int neighborId) = 0;
+    int graphSize_;
+    int graphEdgesNumber_;
 
-        void setupGraphWithSize(int graphSize);
-    public:
-        int graphSize_;
-        int graphEdgesNumber_;
+    bool loadGraphFromFilePath(string filePath);
 
-        void loadGraphFromFilePath(string filePath);
+    int getGraphSize();
+    int getGraphEdgesNumber();
+    int getGraphMinimumDegree();
+    int getGraphMaximumDegree();
+    int getGraphMeanDegree();
+    int getGraphMedianDegree();
+    int getGraphDiameter();
+    vector<int> getVerticesDegrees();
+    list<list<int> > getConnectedComponents();
 
-        int getGraphSize();
-        int getGraphEdgesNumber();
-        int getGraphMinimumDegree();
-        int getGraphMaximumDegree();
-        int getGraphMeanDegree();
-        int getGraphMedianDegree();
-        vector<int> getVerticesDegrees();
+    void breadthFirstSearch(
+        int initialVertexIndex,
+        vector<int>& parent,
+        vector<int>& level
+    );
+    void depthFirstSearch(
+        int initialVertexIndex,
+        vector<int>& parent,
+        vector<int>& level
+    );
+protected:
+    virtual void sortVertices() {}
+    virtual int getNeighbor(int vertexIndex, int neighborId) = 0;
+    virtual void addEdge(int vertex1, int vertex2);
+    virtual void setupGraphWithSize(int graphSize);
 
-        void breadthFirstSearch(
-            int initialVertexIndex,
-            vector<int>& parent,
-            vector<int>& level
-        );
-        void depthFirstSearch(
-            int initialVertexIndex,
-            vector<int>& parent,
-            vector<int>& level
-        );
+    vector<int> verticesDegrees_;
+
+    void setupGraphWithEdges(istream& file);
 
     void DFSUtil(int startNodeIndex, vector<int>& parent);
     int BFSUtil(int startNodeIndex, vector<int>& level, int goalIndex);
-    };
-}
+};
