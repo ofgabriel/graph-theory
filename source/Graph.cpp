@@ -123,45 +123,62 @@ int Graph::getGraphMinimumDegree() {
         }
     }
 
-    return minimumDegree;
+void Graph::DFSUtil(int initialVertexIndex, vector<int>& parent)
+{
+	stack<int> stack;
+
+	stack.push(initialVertexIndex);
+
+	parent[initialVertexIndex - 1] = 0;
+
+	while (!stack.empty()) {
+		int nodeId = stack.top();
+		stack.pop();
+		
+		for (int i = 0; i < getVerticesDegrees()[nodeId - 1]; i++) {
+			int neighborId = getNeighbor(nodeId, i);
+
+			if (parent[neighborId - 1] != UINT_MAX) {
+				continue;
+			}
+
+			parent[neighborId - 1] = initialVertexIndex;
+			stack.push(neighborId);
+		}
+	}
 }
 
-int Graph::getGraphMaximumDegree() {
-    int maximumDegree = UINT_MAX;
+int Graph::BFSUtil(int initialVertexIndex, vector<int>& level, int goalIndex)
+{
+	int diameter = 0;
+	queue<int> queue;
 
-    for (int i = 0; i < getGraphSize(); i++) {
-        if (getVerticesDegrees()[i] > maximumDegree) {
-            maximumDegree = getVerticesDegrees()[i];
-        }
-    }
+	queue.push(initialVertexIndex);
+	level[initialVertexIndex - 1] = 0;
 
-    return maximumDegree;
-}
+	while (!queue.empty()) {
+		int nodeId = queue.front();
+		queue.pop();
 
-int Graph::getGraphMeanDegree() {
-    if (getGraphSize() == 0) {
-        return 0;
-    }
+		if (goalIndex == nodeId) {
+			return diameter;
+		}
+		
+		for (int i = 0; i < getVerticesDegrees()[nodeId - 1]; i++) {
+			int neighborId = getNeighbor(nodeId, i);
 
-    return (float)getGraphEdgesNumber() / (float)getGraphSize();
-}
+			if (level[neighborId - 1] != -1) {
+				continue;
+			}
 
-int Graph::getGraphMedianDegree() {
-    int size = getVerticesDegrees().size();
+			level[neighborId - 1] = level[nodeId - 1] + 1;
 
-    if (size == 0) {
-        return 0;
-    }
+            if ((int)level[neighborId - 1] > diameter) {
+				diameter = level[neighborId - 1];
+			}
 
-    vector<int> degrees(getVerticesDegrees());
-
-    if (size % 2 == 0) {
-        return (degrees[size / 2 - 1] + degrees[size / 2]) / 2;
-    }
-
-    return degrees[size / 2];
-}
-
-vector<int> Graph::getVerticesDegrees() {
-    return verticesDegrees_;
+			queue.push(neighborId);
+		}
+	}
+	return diameter;
 }

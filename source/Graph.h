@@ -39,5 +39,8 @@ namespace Lib
             vector<int>& parent,
             vector<int>& level
         );
+
+    void DFSUtil(int startNodeIndex, vector<int>& parent);
+    int BFSUtil(int startNodeIndex, vector<int>& level, int goalIndex);
     };
 }
