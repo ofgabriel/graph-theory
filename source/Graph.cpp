@@ -177,7 +177,8 @@ void Graph::breadthFirstSearch(
         for (int i = 0; i < verticesDegrees_[vertexId - 1]; i++) {
             int neighborId = getNeighbor(vertexId, i);
 
-            if (level[neighborId - 1] != UINT_MAX) {
+
+            if (parent[neighborId - 1] != UINT_MAX) {
                 continue;
             }
 
