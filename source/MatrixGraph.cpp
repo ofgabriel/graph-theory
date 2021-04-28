@@ -1,4 +1,4 @@
-#include "MatrixGraph.h";
+#include "MatrixGraph.h"
 
 using namespace Lib;
 using namespace std;
