@@ -1,3 +1,4 @@
+#include "Timing.h"
 #include "ListGraph.h"
 #include <iostream>
 #include <vector>
@@ -18,8 +19,14 @@ int main(void) {
     int initialVertices[3] = {1, 2, 3};
     int targetParents[3] = {10, 20, 30};
 
+    INIT_TIMER();
     for (int i = 0; i < SOURCES_NUMBER; i++) {
+        cout << "Loading graph " << graphSources[i] << "\n";
+
+        START_TIMER();
         graph.loadGraphFromFilePath(graphSources[i]);
+        STOP_TIMER();
+        PRINT_TIMER("File read", 1);
 
         for (int j = 0; j < 3; j++) {
             vector<int> graphBfsParents(graph.getGraphSize(), UINT_MAX);
@@ -71,7 +78,11 @@ int main(void) {
         cout << "Size of the biggest connected component: " << maxCounter << "\n";
         cout << "Size of the smallest connected component: " << minCounter << "\n";
 
+        START_TIMER();
         cout << "Graph diameter: " << graph.getGraphDiameter() << "\n";
+        STOP_TIMER();
+        PRINT_TIMER("Diameter calculated", 1);
+        cout << "--------------------------\n\n";
     }
 
     return 0;

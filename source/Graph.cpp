@@ -1,6 +1,4 @@
 #include "Graph.h"
-#include "Timing.h"
-
 #include <iostream>
 #include <fstream>
 #include <queue>
@@ -11,8 +9,6 @@
 using namespace std;
 
 bool Graph::loadGraphFromFilePath(string filePath) {
-    INIT_TIMER;
-    START_TIMER;
 
     ifstream file;
 
@@ -27,10 +23,6 @@ bool Graph::loadGraphFromFilePath(string filePath) {
     setupGraphWithEdges(file);
 
     sortVertices();
-
-    STOP_TIMER();
-    PRINT_TIMER("File read", 1);
-
     return true;
 }
 
@@ -91,8 +83,6 @@ int Graph::getGraphMedianDegree() {
 }
 
 int Graph::getGraphDiameter() {
-    INIT_TIMER;
-    START_TIMER;
 
     int diameter = 0;
     vector<int> order = vector<int>(getGraphSize());
@@ -115,10 +105,6 @@ int Graph::getGraphDiameter() {
             diameter = d;
         }
     }
-
-    STOP_TIMER();
-    PRINT_TIMER("Diameter calculated", 1);
-
     return diameter;
 }
 
