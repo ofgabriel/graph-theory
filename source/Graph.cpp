@@ -4,7 +4,6 @@
 #include <queue>
 #include <climits>
 #include <stack>
-#include <random>
 
 using namespace std;
 
@@ -98,26 +97,15 @@ int Graph::getGraphMedianDegree() {
 }
 
 int Graph::getGraphDiameter() {
-
     int diameter = 0;
-    vector<int> order = vector<int>(getGraphSize());
-
-#pragma omp parallel for
-    for (int i = 0; i < getGraphSize(); i++) {
-        order[i] = i;
-    }
-
-    default_random_engine random;
-    shuffle(order.begin(), order.end(), random);
-
 #pragma omp parallel for shared(diameter)
-    for (int i = 0; i < getGraphSize(); i++) {
-        int vertexId = order[i] = 1;
+    for (int i = 1; i <= getGraphSize(); i++) {
         vector<int> level(getGraphSize(), -1);
-        int d = BFSUtil(vertexId, level, UINT_MAX);
+        int d = BFSUtil(i, level, UINT_MAX);
 
         if (d > diameter) {
             diameter = d;
+            cout << "Found bigger diameter: " << diameter;
         }
     }
     return diameter;
