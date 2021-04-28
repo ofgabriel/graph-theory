@@ -14,7 +14,7 @@ void ListGraph::clear()
 }
 
 void ListGraph::addVertex(int index) {
-    verticesList_.push_back(vector<int>());
+    verticesList_[index - 1] = vector<int>();
 }
 
 void ListGraph::addEdge(int vertex1, int vertex2) {

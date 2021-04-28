@@ -17,6 +17,7 @@ void MatrixGraph::clear()
 
 void MatrixGraph::addVertex(int index) {
     verticesMatrix_[index - 1] = vector<bool>(getGraphSize());
+    verticesDegrees_[index - 1] = 0;
 }
 
 void MatrixGraph::addEdge(int vertex1, int vertex2) {
@@ -32,10 +33,10 @@ void MatrixGraph::addEdge(int vertex1, int vertex2) {
 int MatrixGraph::getNeighbor(int vertexIndex, int neighborId) {
     int i = 0;
     int counter = neighborId;
-    int graphSize = getGraphSize();
     auto line = verticesMatrix_[vertexIndex - 1];
+    int graphSize = getGraphSize();
 
-    while (counter >= 0 && i < graphSize) {
+    while (counter >= 0 && i <= graphSize) {
         if (line[i]) {
             counter--;
         }
@@ -47,7 +48,7 @@ int MatrixGraph::getNeighbor(int vertexIndex, int neighborId) {
 
 void MatrixGraph::setupGraphWithSize(int graphSize) {
     verticesMatrix_.resize(graphSize);
-    verticesDegrees_.resize(graphSize);
+    verticesDegrees_.resize(graphSize, 0);
     Graph::setupGraphWithSize(graphSize);
 }
 
