@@ -3,6 +3,16 @@
 using namespace Lib;
 using namespace std;
 
+MatrixGraph::MatrixGraph() : Graph()
+{
+    verticesMatrix_ = vector<vector<bool>>();
+}
+
+void MatrixGraph::clear()
+{
+    verticesMatrix_.clear();
+}
+
 void MatrixGraph::addVertex(int index) {
     verticesMatrix_[index] = vector<bool>(getGraphSize());
 }
@@ -30,6 +40,6 @@ int MatrixGraph::getNeighbor(int vertexIndex, int neighborId) {
 }
 
 void MatrixGraph::setupGraphWithSize(int graphSize) {
-    verticesMatrix_ = vector<vector<bool>>(graphSize);
+    verticesMatrix_.resize(graphSize);
     Graph::setupGraphWithSize(graphSize);
 }

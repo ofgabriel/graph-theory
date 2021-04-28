@@ -8,8 +8,20 @@
 
 using namespace std;
 
-bool Graph::loadGraphFromFilePath(string filePath) {
+Graph::Graph()
+{
+    verticesDegrees_ = vector<int>();
+}
 
+void Graph::clear()
+{
+    graphSize_ = 0;
+    graphEdgesNumber_ = 0;
+    verticesDegrees_.clear();
+}
+
+bool Graph::loadGraphFromFilePath(string filePath) {
+    clear();
     ifstream file;
 
     file.open(filePath);
@@ -237,7 +249,7 @@ void Graph::setupGraphWithEdges(istream& file) {
 }
 
 void Graph::setupGraphWithSize(int graphSize) {
-    verticesDegrees_ = vector<int>(graphSize);
+    verticesDegrees_.resize(graphSize);
     int i = 0;
 
     while (i < getGraphSize()) {

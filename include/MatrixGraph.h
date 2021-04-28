@@ -8,7 +8,9 @@ namespace Lib
     class MatrixGraph : public Graph
     {
     public:
+        MatrixGraph();
         void addVertex(int index) override;
+        void clear() override;
         void addEdge(int vertex1, int vertex2) override;
 
         int getNeighbor(int vertexIndex, int neighborId) override;

@@ -3,6 +3,16 @@
 
 using namespace std;
 
+ListGraph::ListGraph() : Graph()
+{
+    verticesList_ = vector<vector<int>>();
+}
+
+void ListGraph::clear()
+{
+    verticesList_.clear();
+}
+
 void ListGraph::addVertex(int index) {
     verticesList_.push_back(vector<int>());
 }
@@ -25,6 +35,6 @@ int ListGraph::getNeighbor(int vertexIndex, int neighborId) {
 }
 
 void ListGraph::setupGraphWithSize(int graphSize) {
-    verticesList_ = vector<vector<int>>(graphSize);
+    verticesList_.resize(graphSize);
     Graph::setupGraphWithSize(graphSize);
 }

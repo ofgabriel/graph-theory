@@ -18,6 +18,9 @@ using namespace std;
 class Graph
 {
 public:
+    Graph();
+    
+    virtual void clear();
     virtual void addVertex(int index) = 0;
 
     int graphSize_ = 0;
