@@ -8,7 +8,7 @@
 #include <climits>
 #include <random>
 
-const int SOURCES_NUMBER = 1;
+const int SOURCES_NUMBER = 6;
 
 using namespace std;
 using namespace Lib;
@@ -21,12 +21,12 @@ int main(void) {
     ListGraph graph;
 
     string graphSources[SOURCES_NUMBER] = {
+        "./assets/grafo_1.txt",
+        "./assets/grafo_2.txt",
+        "./assets/grafo_3.txt",
+        "./assets/grafo_4.txt",
         "./assets/grafo_5.txt",
-        //"./assets/grafo_2.txt",
-        //"./assets/grafo_3.txt",
-        //"./assets/grafo_4.txt",
-        //"./assets/grafo_5.txt",
-        //"./assets/grafo_6.txt"
+        "./assets/grafo_6.txt"
     };
     int initialVertices[3] = {1, 2, 3};
     int targetParents[3] = {10, 20, 30};
@@ -46,7 +46,6 @@ int main(void) {
         timeBreadthFirstSearch(graph, 1000);
         timeDepthFirstSearch(graph, 1000);
 
-        /*
         for (int j = 0; j < 3; j++) {
             vector<int> graphBfsParents(graph.getGraphSize(), UINT_MAX);
             vector<int> graphDfsParents(graph.getGraphSize(), UINT_MAX);
@@ -96,14 +95,11 @@ int main(void) {
 
         cout << "Size of the biggest connected component: " << maxCounter << "\n";
         cout << "Size of the smallest connected component: " << minCounter << "\n";
-        //*/
 
-        /*
         START_TIMER();
         cout << "Graph diameter: " << graph.getGraphDiameter() << "\n";
         STOP_TIMER();
         PRINT_TIMER("Diameter calculated", 1);
-        //*/
         cout << "--------------------------\n\n";
     }
 
@@ -120,15 +116,12 @@ void timeBreadthFirstSearch(Graph& graph, int iterations)
     std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
     std::uniform_int_distribution<int> uni(1, graphSize + 1); // guaranteed unbiased
 
-//#pragma omp parallel for
 	for (int i = 0; i < iterations; i++)
 	{
-		//cout << i << "/" << iterations;
         auto startNode = uni(rng);
         vector<int> parent(graphSize, UINT_MAX);
         vector<int> level(graphSize);
         graph.breadthFirstSearch(startNode, parent, level);
-		//printf("\r");
 	}
     
 	STOP_TIMER();
@@ -145,15 +138,12 @@ void timeDepthFirstSearch(Graph& graph, int iterations)
     std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
     std::uniform_int_distribution<int> uni(1, graphSize + 1); // guaranteed unbiased
 
-//#pragma omp parallel for
 	for (int i = 0; i < iterations; i++)
 	{
-		//cout << i << "/" << iterations;
         auto startNode = uni(rng);
         vector<int> parent(graphSize, UINT_MAX);
         vector<int> level(graphSize);
         graph.depthFirstSearch(startNode, parent, level);
-		//printf("\r");
 	}
     
 	STOP_TIMER();
