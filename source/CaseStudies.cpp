@@ -1,4 +1,4 @@
-#include "../source/ListGraph.h"
+#include "ListGraph.h"
 #include <iostream>
 #include <vector>
 #include <string>
