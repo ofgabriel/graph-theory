@@ -13,14 +13,15 @@ const int SOURCES_NUMBER = 1;
 using namespace std;
 using namespace Lib;
 
-void timeSearchFunction(Graph& graph, void (Graph::*searchFunction)(int, vector<int>&, vector<int>&), int iterations, string name);
+void timeBreadthFirstSearch(Graph& graph, int iterations);
+void timeDepthFirstSearch(Graph& graph, int iterations);
 
 int main(void) {
     auto startMemory = getVirtualMemory();
     ListGraph graph;
 
     string graphSources[SOURCES_NUMBER] = {
-        "./assets/grafo_4.txt",
+        "./assets/grafo_5.txt",
         //"./assets/grafo_2.txt",
         //"./assets/grafo_3.txt",
         //"./assets/grafo_4.txt",
@@ -42,8 +43,8 @@ int main(void) {
         auto memory = getVirtualMemory();
         cout << "Memory in KB " << memory - startMemory << "\n";
 
-        timeSearchFunction(graph, &Graph::breadthFirstSearch, 1000, "BFS");
-        //timeSearchFunction(graph, &Graph::depthFirstSearch, 1000, "DFS");
+        timeBreadthFirstSearch(graph, 1000);
+        timeDepthFirstSearch(graph, 1000);
 
         /*
         for (int j = 0; j < 3; j++) {
@@ -109,7 +110,7 @@ int main(void) {
     return 0;
 }
 
-void timeSearchFunction(Graph& graph, void (Graph::*searchFunction)(int, vector<int>&, vector<int>&), int iterations, string name)
+void timeBreadthFirstSearch(Graph& graph, int iterations)
 {
     auto graphSize = graph.getGraphSize();
 	INIT_TIMER();
@@ -122,14 +123,39 @@ void timeSearchFunction(Graph& graph, void (Graph::*searchFunction)(int, vector<
 //#pragma omp parallel for
 	for (int i = 0; i < iterations; i++)
 	{
-		cout << i << "/" << iterations;
+		//cout << i << "/" << iterations;
         auto startNode = uni(rng);
         vector<int> parent(graphSize, UINT_MAX);
         vector<int> level(graphSize);
-        (graph.*searchFunction)(startNode, parent, level);
-		printf("\r");
+        graph.breadthFirstSearch(startNode, parent, level);
+		//printf("\r");
 	}
     
 	STOP_TIMER();
-    PRINT_TIMER("Timing " << name, iterations);
+    PRINT_TIMER("Timing BFS", iterations);
+}
+
+void timeDepthFirstSearch(Graph& graph, int iterations)
+{
+    auto graphSize = graph.getGraphSize();
+	INIT_TIMER();
+	START_TIMER();
+
+    std::random_device rd;     // only used once to initialise (seed) engine
+    std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
+    std::uniform_int_distribution<int> uni(1, graphSize + 1); // guaranteed unbiased
+
+//#pragma omp parallel for
+	for (int i = 0; i < iterations; i++)
+	{
+		//cout << i << "/" << iterations;
+        auto startNode = uni(rng);
+        vector<int> parent(graphSize, UINT_MAX);
+        vector<int> level(graphSize);
+        graph.depthFirstSearch(startNode, parent, level);
+		//printf("\r");
+	}
+    
+	STOP_TIMER();
+    PRINT_TIMER("Timing DFS", iterations);
 }
