@@ -97,7 +97,8 @@ int main(void) {
         cout << "Size of the smallest connected component: " << minCounter << "\n";
 
         START_TIMER();
-        cout << "Graph diameter: " << graph.getGraphDiameter() << "\n";
+        auto diameter = graph.getGraphDiameter();
+        cout << "Graph diameter: " << diameter << "\n";
         STOP_TIMER();
         PRINT_TIMER("Diameter calculated", 1);
         cout << "--------------------------\n\n";

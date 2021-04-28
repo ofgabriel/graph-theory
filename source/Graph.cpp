@@ -105,7 +105,7 @@ int Graph::getGraphDiameter() {
 
         if (d > diameter) {
             diameter = d;
-            cout << "Found bigger diameter: " << diameter;
+            cout << "Found bigger diameter: " << diameter << "\n";
         }
     }
     return diameter;
