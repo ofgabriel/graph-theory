@@ -25,8 +25,6 @@ int ListGraph::getNeighbor(int vertexIndex, int neighborId) {
 }
 
 void ListGraph::setupGraphWithSize(int graphSize) {
+    verticesList_ = vector<vector<int>>(graphSize);
     Graph::setupGraphWithSize(graphSize);
-
-    verticesList_ = vector<vector<int> >();
-    verticesList_.reserve(graphSize);
 }

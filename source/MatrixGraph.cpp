@@ -30,7 +30,6 @@ int MatrixGraph::getNeighbor(int vertexIndex, int neighborId) {
 }
 
 void MatrixGraph::setupGraphWithSize(int graphSize) {
+    verticesMatrix_ = vector<vector<bool>>(graphSize);
     Graph::setupGraphWithSize(graphSize);
-
-    verticesMatrix_ = vector<vector<bool> >(graphSize);
 }
