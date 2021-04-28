@@ -16,6 +16,8 @@ public:
     void sortVertices() override;
 
     int getNeighbor(int vertexIndex, int neighborId) override;
+    int getVerticeDegree(int vertexIndex) override;
+    
 protected:
     void setupGraphWithSize(int graphSize) override;
 private:

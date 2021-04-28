@@ -1,26 +1,29 @@
 #include "Timing.h"
 #include "Memory.h"
 #include "ListGraph.h"
+#include "MatrixGraph.h"
 #include <iostream>
 #include <vector>
 #include <string>
 #include <climits>
 #include <random>
 
-const int SOURCES_NUMBER = 4;
+const int SOURCES_NUMBER = 1;
 
 using namespace std;
+using namespace Lib;
 
 void timeSearchFunction(Graph& graph, void (Graph::*searchFunction)(int, vector<int>&, vector<int>&), int iterations, string name);
 
 int main(void) {
+    auto startMemory = getVirtualMemory();
     ListGraph graph;
 
     string graphSources[SOURCES_NUMBER] = {
-        "./assets/grafo_1.txt",
-        "./assets/grafo_2.txt",
-        "./assets/grafo_3.txt",
         "./assets/grafo_4.txt",
+        //"./assets/grafo_2.txt",
+        //"./assets/grafo_3.txt",
+        //"./assets/grafo_4.txt",
         //"./assets/grafo_5.txt",
         //"./assets/grafo_6.txt"
     };
@@ -37,7 +40,7 @@ int main(void) {
         PRINT_TIMER("File read", 1);
 
         auto memory = getVirtualMemory();
-        cout << "Memory in KB " << memory << "\n";
+        cout << "Memory in KB " << memory - startMemory << "\n";
 
         timeSearchFunction(graph, &Graph::breadthFirstSearch, 1000, "BFS");
         //timeSearchFunction(graph, &Graph::depthFirstSearch, 1000, "DFS");
@@ -116,6 +119,7 @@ void timeSearchFunction(Graph& graph, void (Graph::*searchFunction)(int, vector<
     std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
     std::uniform_int_distribution<int> uni(1, graphSize + 1); // guaranteed unbiased
 
+//#pragma omp parallel for
 	for (int i = 0; i < iterations; i++)
 	{
 		cout << i << "/" << iterations;

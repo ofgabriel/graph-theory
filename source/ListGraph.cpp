@@ -38,3 +38,7 @@ void ListGraph::setupGraphWithSize(int graphSize) {
     verticesList_.resize(graphSize);
     Graph::setupGraphWithSize(graphSize);
 }
+
+int ListGraph::getVerticeDegree(int vertexId) {
+    return verticesList_[vertexId - 1].size();
+}

@@ -35,7 +35,7 @@ public:
     int getGraphMeanDegree();
     int getGraphMedianDegree();
     int getGraphDiameter();
-    vector<int> getVerticesDegrees();
+    virtual int getVerticeDegree(int nodeId) = 0;
     list<list<int> > getConnectedComponents();
 
     void breadthFirstSearch(
@@ -53,8 +53,6 @@ protected:
     virtual int getNeighbor(int vertexIndex, int neighborId) = 0;
     virtual void addEdge(int vertex1, int vertex2);
     virtual void setupGraphWithSize(int graphSize);
-
-    vector<int> verticesDegrees_;
 
     void setupGraphWithEdges(istream& file);
 

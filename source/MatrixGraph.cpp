@@ -6,11 +6,13 @@ using namespace std;
 MatrixGraph::MatrixGraph() : Graph()
 {
     verticesMatrix_ = vector<vector<bool>>();
+    verticesDegrees_ = vector<int>();
 }
 
 void MatrixGraph::clear()
 {
     verticesMatrix_.clear();
+    verticesDegrees_.clear();
 }
 
 void MatrixGraph::addVertex(int index) {
@@ -41,5 +43,10 @@ int MatrixGraph::getNeighbor(int vertexIndex, int neighborId) {
 
 void MatrixGraph::setupGraphWithSize(int graphSize) {
     verticesMatrix_.resize(graphSize);
+    verticesDegrees_.resize(graphSize);
     Graph::setupGraphWithSize(graphSize);
+}
+
+int MatrixGraph::getVerticeDegree(int vertexId) {
+    return verticesDegrees_[vertexId - 1];
 }

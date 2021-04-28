@@ -10,14 +10,12 @@ using namespace std;
 
 Graph::Graph()
 {
-    verticesDegrees_ = vector<int>();
 }
 
 void Graph::clear()
 {
     graphSize_ = 0;
     graphEdgesNumber_ = 0;
-    verticesDegrees_.clear();
 }
 
 bool Graph::loadGraphFromFilePath(string filePath) {
@@ -49,9 +47,10 @@ int Graph::getGraphEdgesNumber() {
 int Graph::getGraphMinimumDegree() {
     int minimumDegree = UINT_MAX;
 
-    for (int i = 0; i < getGraphSize(); i++) {
-        if (getVerticesDegrees()[i] < minimumDegree) {
-            minimumDegree = getVerticesDegrees()[i];
+    for (int i = 1; i <= getGraphSize(); i++) {
+        auto deg = getVerticeDegree(i);
+        if (deg < minimumDegree) {
+            minimumDegree = deg;
         }
     }
 
@@ -62,8 +61,9 @@ int Graph::getGraphMaximumDegree() {
     int maximumDegree = UINT_MAX;
 
     for (int i = 0; i < getGraphSize(); i++) {
-        if (getVerticesDegrees()[i] > maximumDegree) {
-            maximumDegree = getVerticesDegrees()[i];
+        auto deg = getVerticeDegree(i);
+        if (deg > maximumDegree) {
+            maximumDegree = deg;
         }
     }
 
@@ -79,13 +79,16 @@ int Graph::getGraphMeanDegree() {
 }
 
 int Graph::getGraphMedianDegree() {
-    int size = getVerticesDegrees().size();
+    int size = getGraphSize();
 
     if (size == 0) {
         return 0;
     }
 
-    vector<int> degrees(getVerticesDegrees());
+    vector<int> degrees(size);
+    for (int i = 1; i <= getGraphSize(); i++) {
+        degrees[i - 1] = getVerticeDegree(i);
+    }
 
     if (size % 2 == 0) {
         return (degrees[size / 2 - 1] + degrees[size / 2]) / 2;
@@ -118,10 +121,6 @@ int Graph::getGraphDiameter() {
         }
     }
     return diameter;
-}
-
-vector<int> Graph::getVerticesDegrees() {
-    return verticesDegrees_;
 }
 
 list<list<int> > Graph::getConnectedComponents() {
@@ -178,9 +177,8 @@ void Graph::breadthFirstSearch(
         int vertexId = discoveredVertices.front();
         discoveredVertices.pop();
 
-        for (int i = 0; i < verticesDegrees_[vertexId - 1]; i++) {
+        for (int i = 0; i < getVerticeDegree(vertexId); i++) {
             int neighborId = getNeighbor(vertexId, i);
-
 
             if (parent[neighborId - 1] != UINT_MAX) {
                 continue;
@@ -220,7 +218,7 @@ void Graph::depthFirstSearch(
 		}
 
 		explored[vertexId - 1] = true;
-		for (int i = 0; i < getVerticesDegrees()[vertexId - 1]; i++) {
+		for (int i = 0; i < getVerticeDegree(vertexId); i++) {
 			int neighborId = getNeighbor(vertexId, i);
 
 			if (parent[neighborId - 1] == UINT_MAX) {
@@ -235,9 +233,6 @@ void Graph::depthFirstSearch(
 
 void Graph::addEdge(int vertex1, int vertex2) {
     graphEdgesNumber_++;
-
-    verticesDegrees_[vertex1 - 1] += 1;
-    verticesDegrees_[vertex2 - 1] += 1;
 }
 
 void Graph::setupGraphWithEdges(istream& file) {
@@ -249,7 +244,6 @@ void Graph::setupGraphWithEdges(istream& file) {
 }
 
 void Graph::setupGraphWithSize(int graphSize) {
-    verticesDegrees_.resize(graphSize);
     int i = 0;
 
     while (i < getGraphSize()) {
@@ -272,7 +266,7 @@ void Graph::DFSUtil(int initialVertexIndex, vector<int>& parent)
 		int nodeId = stack.top();
 		stack.pop();
 		
-		for (int i = 0; i < getVerticesDegrees()[nodeId - 1]; i++) {
+		for (int i = 0; i < getVerticeDegree(nodeId); i++) {
 			int neighborId = getNeighbor(nodeId, i);
 
 			if (parent[neighborId - 1] != UINT_MAX) {
@@ -301,7 +295,7 @@ int Graph::BFSUtil(int initialVertexIndex, vector<int>& level, int goalIndex)
 			return diameter;
 		}
 		
-		for (int i = 0; i < getVerticesDegrees()[nodeId - 1]; i++) {
+		for (int i = 0; i < getVerticeDegree(nodeId); i++) {
 			int neighborId = getNeighbor(nodeId, i);
 
 			if (level[neighborId - 1] != -1) {
