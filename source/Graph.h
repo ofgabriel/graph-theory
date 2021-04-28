@@ -1,3 +1,5 @@
+#pragma once
+
 #include <string>
 #include <algorithm>
 #include <vector>
@@ -18,8 +20,8 @@ class Graph
 public:
     virtual void addVertex(int index) = 0;
 
-    int graphSize_;
-    int graphEdgesNumber_;
+    int graphSize_ = 0;
+    int graphEdgesNumber_ = 0;
 
     bool loadGraphFromFilePath(string filePath);
 

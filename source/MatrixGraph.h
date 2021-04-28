@@ -1,9 +1,11 @@
+#pragma once
+
 #include "Graph.h"
 #include <vector>
 
 namespace Lib
 {
-    class MatrixGraph : Graph
+    class MatrixGraph : public Graph
     {
     public:
         void addVertex(int index) override;
