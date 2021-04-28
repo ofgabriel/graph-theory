@@ -1,4 +1,5 @@
 #include "Timing.h"
+#include "Memory.h"
 #include "ListGraph.h"
 #include <iostream>
 #include <vector>
@@ -27,6 +28,9 @@ int main(void) {
         graph.loadGraphFromFilePath(graphSources[i]);
         STOP_TIMER();
         PRINT_TIMER("File read", 1);
+
+        auto memory = getVirtualMemory();
+        cout << "Memory in KB " << memory << "\n";
 
         for (int j = 0; j < 3; j++) {
             vector<int> graphBfsParents(graph.getGraphSize(), UINT_MAX);
