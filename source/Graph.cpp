@@ -238,9 +238,9 @@ void Graph::setupGraphWithEdges(istream& file) {
 }
 
 void Graph::setupGraphWithSize(int graphSize) {
-    int i = 0;
+    int i = 1;
 
-    while (i < getGraphSize()) {
+    while (i <= getGraphSize()) {
         addVertex(i);
         i++;
     }
