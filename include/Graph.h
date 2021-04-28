@@ -56,8 +56,6 @@ protected:
     virtual void addEdge(int vertex1, int vertex2);
     virtual void setupGraphWithSize(int graphSize);
 
-    void setupGraphWithEdges(istream& file);
-
     void DFSUtil(int startNodeIndex, vector<int>& parent);
     int BFSUtil(int startNodeIndex, vector<int>& level, int goalIndex);
 };
