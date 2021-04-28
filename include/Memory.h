@@ -1,6 +1,6 @@
 #pragma once
 
-#if defined(__linux__) || defined(__APPLE__)
+#if defined(__linux__)
 
 #include "stdlib.h"
 #include "stdio.h"
@@ -18,7 +18,7 @@
 */
 int getVirtualMemory();
 
-#if defined(__linux__) || defined(__APPLE__)
+#if defined(__linux__)
 
 int parseLine(char* line) {
     // This assumes that a digit will be found and the line ends in " Kb".
@@ -52,6 +52,12 @@ int getVirtualMemory() {
     GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc));
     SIZE_T virtualMemUsedByMe = pmc.PrivateUsage;
     return virtualMemUsedByMe / 1000;
+}
+
+#elif defined(__APPLE__)
+
+int getVirtualMemory() {
+    return -1;
 }
 
 #endif 
