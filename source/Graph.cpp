@@ -36,7 +36,10 @@ bool Graph::loadGraphFromFilePath(string filePath) {
         i++;
     }
 
-    setupGraphWithEdges(file);
+    int vertex1, vertex2;
+    while (file >> vertex1 >> vertex2) {
+        addEdge(vertex1, vertex2);
+    }
 
     sortVertices();
     return true;
@@ -233,14 +236,6 @@ void Graph::depthFirstSearch(
 
 void Graph::addEdge(int vertex1, int vertex2) {
     graphEdgesNumber_++;
-}
-
-void Graph::setupGraphWithEdges(istream& file) {
-    int vertex1, vertex2;
-
-    while (file >> vertex1 >> vertex2) {
-        addEdge(vertex1, vertex2);
-    }
 }
 
 void Graph::setupGraphWithSize(int graphSize) {
