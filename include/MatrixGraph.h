@@ -13,7 +13,7 @@ namespace Lib
         void clear() override;
         void addEdge(int vertex1, int vertex2) override;
 
-        int getNeighbor(int vertexIndex, int neighborId) override;
+        vector<int> getNeighbors(int vertexIndex) override;
         int getVerticeDegree(int vertexIndex) override;
         
     protected:

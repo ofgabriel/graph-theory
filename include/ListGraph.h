@@ -15,10 +15,10 @@ public:
     void addEdge(int vertex1, int vertex2) override;
     void sortVertices() override;
 
-    int getNeighbor(int vertexIndex, int neighborId) override;
     int getVerticeDegree(int vertexIndex) override;
     
 protected:
+    vector<int> getNeighbors(int vertexIndex) override;
     void setupGraphWithSize(int graphSize) override;
 private:
     vector<vector<int> > verticesList_;

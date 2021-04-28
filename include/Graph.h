@@ -52,7 +52,7 @@ public:
     );
 protected:
     virtual void sortVertices() {}
-    virtual int getNeighbor(int vertexIndex, int neighborId) = 0;
+    virtual vector<int> getNeighbors(int vertexIndex) = 0;
     virtual void addEdge(int vertex1, int vertex2);
     virtual void setupGraphWithSize(int graphSize);
 

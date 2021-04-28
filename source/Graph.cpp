@@ -20,15 +20,22 @@ void Graph::clear()
 bool Graph::loadGraphFromFilePath(string filePath) {
     clear();
     ifstream file;
-
+    int graphSize = 0;
     file.open(filePath);
-    file >> graphSize_;
+    file >> graphSize;
 
     if (!file.good()) {
         return false;
     }
 
-    setupGraphWithSize(graphSize_);
+    setupGraphWithSize(graphSize);
+    int i = 1;
+    while (i <= graphSize_)
+    {
+        addVertex(i);
+        i++;
+    }
+
     setupGraphWithEdges(file);
 
     sortVertices();
@@ -59,7 +66,7 @@ int Graph::getGraphMinimumDegree() {
 int Graph::getGraphMaximumDegree() {
     int maximumDegree = UINT_MAX;
 
-    for (int i = 0; i < getGraphSize(); i++) {
+    for (int i = 1; i <= getGraphSize(); i++) {
         auto deg = getVerticeDegree(i);
         if (deg > maximumDegree) {
             maximumDegree = deg;
@@ -171,8 +178,8 @@ void Graph::breadthFirstSearch(
         int vertexId = discoveredVertices.front();
         discoveredVertices.pop();
 
-        for (int i = 0; i < getVerticeDegree(vertexId); i++) {
-            int neighborId = getNeighbor(vertexId, i);
+        auto neighbors = getNeighbors(vertexId);
+        for (auto neighborId : neighbors) {
 
             if (parent[neighborId - 1] != UINT_MAX) {
                 continue;
@@ -212,9 +219,8 @@ void Graph::depthFirstSearch(
 		}
 
 		explored[vertexId - 1] = true;
-		for (int i = 0; i < getVerticeDegree(vertexId); i++) {
-			int neighborId = getNeighbor(vertexId, i);
-
+        auto neighbors = getNeighbors(vertexId);
+		for (auto neighborId : neighbors) {
 			if (parent[neighborId - 1] == UINT_MAX) {
 				parent[neighborId - 1] = vertexId;
 				level[neighborId - 1] = level[vertexId - 1] + 1;
@@ -238,14 +244,7 @@ void Graph::setupGraphWithEdges(istream& file) {
 }
 
 void Graph::setupGraphWithSize(int graphSize) {
-    int i = 1;
-
-    while (i <= getGraphSize()) {
-        addVertex(i);
-        i++;
-    }
-
-    return;
+    graphSize_ = graphSize;
 }
 
 void Graph::DFSUtil(int initialVertexIndex, vector<int>& parent)
@@ -260,8 +259,8 @@ void Graph::DFSUtil(int initialVertexIndex, vector<int>& parent)
 		int nodeId = stack.top();
 		stack.pop();
 		
-		for (int i = 0; i < getVerticeDegree(nodeId); i++) {
-			int neighborId = getNeighbor(nodeId, i);
+        auto neighbors = getNeighbors(nodeId);
+		for (auto neighborId : neighbors) {
 
 			if (parent[neighborId - 1] != UINT_MAX) {
 				continue;
@@ -289,8 +288,8 @@ int Graph::BFSUtil(int initialVertexIndex, vector<int>& level, int goalIndex)
 			return diameter;
 		}
 		
-		for (int i = 0; i < getVerticeDegree(nodeId); i++) {
-			int neighborId = getNeighbor(nodeId, i);
+        auto neighbors = getNeighbors(nodeId);
+		for (auto neighborId : neighbors) {
 
 			if (level[neighborId - 1] != -1) {
 				continue;

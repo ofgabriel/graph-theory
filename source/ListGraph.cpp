@@ -30,13 +30,13 @@ void ListGraph::sortVertices() {
     }
 }
 
-int ListGraph::getNeighbor(int vertexIndex, int neighborId) {
-    return verticesList_[vertexIndex - 1][neighborId];
+vector<int> ListGraph::getNeighbors(int vertexIndex) {
+    return verticesList_[vertexIndex - 1];
 }
 
 void ListGraph::setupGraphWithSize(int graphSize) {
-    verticesList_.resize(graphSize);
     Graph::setupGraphWithSize(graphSize);
+    verticesList_.resize(graphSize);
 }
 
 int ListGraph::getVerticeDegree(int vertexId) {
