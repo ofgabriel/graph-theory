@@ -35,6 +35,8 @@ public:
     int getGraphMeanDegree();
     int getGraphMedianDegree();
     int getGraphDiameter();
+    int getDistance(int nodeId1, int nodeId2);
+
     virtual int getVerticeDegree(int nodeId) = 0;
     list<list<int> > getConnectedComponents();
 

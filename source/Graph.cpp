@@ -111,6 +111,12 @@ int Graph::getGraphDiameter() {
     return diameter;
 }
 
+int Graph::getDistance(int nodeId1, int nodeId2) {
+    vector<int> graphLevels10(getGraphSize(), -1);
+    BFSUtil(nodeId1, graphLevels10, nodeId2);
+    return graphLevels10[nodeId2 - 1];
+}
+
 list<list<int> > Graph::getConnectedComponents() {
     vector<list<int>*> map = vector<list<int>*>(getGraphSize());
     list<list<int> > connectedComponents = list<list<int> >();
