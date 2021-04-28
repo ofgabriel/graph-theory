@@ -31,14 +31,14 @@ void MatrixGraph::addEdge(int vertex1, int vertex2) {
 }
 
 vector<int> MatrixGraph::getNeighbors(int vertexIndex) {
+    auto neighbors = vector<int>();
+    auto line = verticesMatrix_[vertexIndex - 1];
     int count = 0;
     int deg = getVerticeDegree(vertexIndex);
-    auto neighbors = vector<int>();
 
     int i = 0;
-    auto line = verticesMatrix_[vertexIndex - 1];
     int graphSize = getGraphSize();
-
+    std::find(line.begin(), line.end(), true);
     while (count < deg && i < graphSize) {
         if (line[i]) {
             neighbors.push_back(i + 1);

@@ -1,4 +1,5 @@
 #include "Graph.h"
+#include "Timing.h"
 #include <iostream>
 #include <fstream>
 #include <queue>
@@ -54,7 +55,7 @@ int Graph::getGraphEdgesNumber() {
 }
 
 int Graph::getGraphMinimumDegree() {
-    int minimumDegree = UINT_MAX;
+    int minimumDegree = INT_MAX;
 
     for (int i = 1; i <= getGraphSize(); i++) {
         auto deg = getVerticeDegree(i);
@@ -67,7 +68,7 @@ int Graph::getGraphMinimumDegree() {
 }
 
 int Graph::getGraphMaximumDegree() {
-    int maximumDegree = UINT_MAX;
+    int maximumDegree = 0;
 
     for (int i = 1; i <= getGraphSize(); i++) {
         auto deg = getVerticeDegree(i);
@@ -108,14 +109,17 @@ int Graph::getGraphMedianDegree() {
 
 int Graph::getGraphDiameter() {
     int diameter = 0;
+    INIT_TIMER();
+    START_TIMER();
 #pragma omp parallel for shared(diameter)
     for (int i = 1; i <= getGraphSize(); i++) {
         vector<int> level(getGraphSize(), -1);
-        int d = BFSUtil(i, level, UINT_MAX);
+        int d = BFSUtil(i, level, -1);
 
         if (d > diameter) {
             diameter = d;
-            cout << "Found bigger diameter: " << diameter << "\n";
+            STOP_TIMER();
+            PRINT_TIMER("Found bigger diameter: " << diameter, 1);
         }
     }
     return diameter;
@@ -131,10 +135,10 @@ list<list<int> > Graph::getConnectedComponents() {
     vector<list<int>*> map = vector<list<int>*>(getGraphSize());
     list<list<int> > connectedComponents = list<list<int> >();
 
-    vector<int> parent(getGraphSize(), UINT_MAX);
+    vector<int> parent(getGraphSize(), -1);
 
     for (int vertexId = 1; vertexId < getGraphSize() + 1; vertexId++) {
-        if (parent[vertexId - 1] != UINT_MAX) {
+        if (parent[vertexId - 1] != -1) {
             continue;
         }
 
@@ -147,7 +151,7 @@ list<list<int> > Graph::getConnectedComponents() {
     }
 
     for (int vertexId = 0; vertexId < getGraphSize(); vertexId++) {
-        if (parent[vertexId] == UINT_MAX) {
+        if (parent[vertexId] == -1) {
             continue;
         }
 
@@ -184,7 +188,7 @@ void Graph::breadthFirstSearch(
         auto neighbors = getNeighbors(vertexId);
         for (auto neighborId : neighbors) {
 
-            if (parent[neighborId - 1] != UINT_MAX) {
+            if (parent[neighborId - 1] != -1) {
                 continue;
             }
 
@@ -224,7 +228,7 @@ void Graph::depthFirstSearch(
 		explored[vertexId - 1] = true;
         auto neighbors = getNeighbors(vertexId);
 		for (auto neighborId : neighbors) {
-			if (parent[neighborId - 1] == UINT_MAX) {
+			if (parent[neighborId - 1] == -1) {
 				parent[neighborId - 1] = vertexId;
 				level[neighborId - 1] = level[vertexId - 1] + 1;
 			}
@@ -257,7 +261,7 @@ void Graph::DFSUtil(int initialVertexIndex, vector<int>& parent)
         auto neighbors = getNeighbors(nodeId);
 		for (auto neighborId : neighbors) {
 
-			if (parent[neighborId - 1] != UINT_MAX) {
+			if (parent[neighborId - 1] != -1) {
 				continue;
 			}
 
