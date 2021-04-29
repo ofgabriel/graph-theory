@@ -11,7 +11,6 @@
 const int SOURCES_NUMBER = 6;
 
 using namespace std;
-using namespace Lib;
 
 void timeBreadthFirstSearch(Graph& graph, int iterations);
 void timeDepthFirstSearch(Graph& graph, int iterations);
