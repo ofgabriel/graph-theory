@@ -162,6 +162,10 @@ list<list<int> > Graph::getConnectedComponents() {
         map[parent[vertexId] - 1]->push_front(vertexId + 1);
     }
 
+    connectedComponents.sort([](const list<int> component1, const list<int> component2) {
+        return component1.size() > component2.size();
+    });
+
     return connectedComponents;
 }
 
