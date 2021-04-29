@@ -32,7 +32,7 @@ public:
     int getGraphEdgesNumber();
     int getGraphMinimumDegree();
     int getGraphMaximumDegree();
-    int getGraphMeanDegree();
+    float getGraphMeanDegree();
     int getGraphMedianDegree();
     int getGraphDiameter();
     int getDistance(int nodeId1, int nodeId2);

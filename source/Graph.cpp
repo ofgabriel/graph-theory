@@ -80,7 +80,7 @@ int Graph::getGraphMaximumDegree() {
     return maximumDegree;
 }
 
-int Graph::getGraphMeanDegree() {
+float Graph::getGraphMeanDegree() {
     if (getGraphSize() == 0) {
         return 0;
     }
