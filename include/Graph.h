@@ -32,7 +32,7 @@ public:
     int getGraphEdgesNumber();
     int getGraphMinimumDegree();
     int getGraphMaximumDegree();
-    int getGraphMeanDegree();
+    float getGraphMeanDegree();
     int getGraphMedianDegree();
     int getGraphDiameter();
     int getDistance(int nodeId1, int nodeId2);
@@ -55,8 +55,6 @@ protected:
     virtual vector<int> getNeighbors(int vertexIndex) = 0;
     virtual void addEdge(int vertex1, int vertex2);
     virtual void setupGraphWithSize(int graphSize);
-
-    void setupGraphWithEdges(istream& file);
 
     void DFSUtil(int startNodeIndex, vector<int>& parent);
     int BFSUtil(int startNodeIndex, vector<int>& level, int goalIndex);

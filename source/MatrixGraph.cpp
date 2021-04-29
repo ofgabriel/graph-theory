@@ -1,6 +1,5 @@
 #include "MatrixGraph.h"
 
-using namespace Lib;
 using namespace std;
 
 MatrixGraph::MatrixGraph() : Graph()

@@ -37,7 +37,10 @@ bool Graph::loadGraphFromFilePath(string filePath) {
         i++;
     }
 
-    setupGraphWithEdges(file);
+    int vertex1, vertex2;
+    while (file >> vertex1 >> vertex2) {
+        addEdge(vertex1, vertex2);
+    }
 
     sortVertices();
     return true;
@@ -77,7 +80,7 @@ int Graph::getGraphMaximumDegree() {
     return maximumDegree;
 }
 
-int Graph::getGraphMeanDegree() {
+float Graph::getGraphMeanDegree() {
     if (getGraphSize() == 0) {
         return 0;
     }
@@ -141,10 +144,10 @@ list<list<int> > Graph::getConnectedComponents() {
 
         DFSUtil(vertexId, parent);
 
-        connectedComponents.push_front(list<int>());
+        connectedComponents.push_back(list<int>());
 
-        map[vertexId - 1] = &*connectedComponents.begin();
-        map[vertexId - 1]->push_front(vertexId);
+        map[vertexId - 1] = &connectedComponents.back();
+        map[vertexId - 1]->push_back(vertexId);
     }
 
     for (int vertexId = 0; vertexId < getGraphSize(); vertexId++) {
@@ -156,8 +159,12 @@ list<list<int> > Graph::getConnectedComponents() {
             continue;
         }
 
-        map[parent[vertexId] - 1]->push_front(vertexId + 1);
+        map[parent[vertexId] - 1]->push_back(vertexId + 1);
     }
+
+    connectedComponents.sort([](const list<int> component1, const list<int> component2) {
+        return component1.size() > component2.size();
+    });
 
     return connectedComponents;
 }
@@ -237,14 +244,6 @@ void Graph::depthFirstSearch(
 
 void Graph::addEdge(int vertex1, int vertex2) {
     graphEdgesNumber_++;
-}
-
-void Graph::setupGraphWithEdges(istream& file) {
-    int vertex1, vertex2;
-
-    while (file >> vertex1 >> vertex2) {
-        addEdge(vertex1, vertex2);
-    }
 }
 
 void Graph::setupGraphWithSize(int graphSize) {
