@@ -144,10 +144,10 @@ list<list<int> > Graph::getConnectedComponents() {
 
         DFSUtil(vertexId, parent);
 
-        connectedComponents.push_front(list<int>());
+        connectedComponents.push_back(list<int>());
 
-        map[vertexId - 1] = &*connectedComponents.begin();
-        map[vertexId - 1]->push_front(vertexId);
+        map[vertexId - 1] = &connectedComponents.back();
+        map[vertexId - 1]->push_back(vertexId);
     }
 
     for (int vertexId = 0; vertexId < getGraphSize(); vertexId++) {
@@ -159,7 +159,7 @@ list<list<int> > Graph::getConnectedComponents() {
             continue;
         }
 
-        map[parent[vertexId] - 1]->push_front(vertexId + 1);
+        map[parent[vertexId] - 1]->push_back(vertexId + 1);
     }
 
     connectedComponents.sort([](const list<int> component1, const list<int> component2) {
