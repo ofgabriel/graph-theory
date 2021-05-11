@@ -18,34 +18,6 @@ void Graph::clear()
     graphEdgesNumber_ = 0;
 }
 
-bool Graph::loadGraphFromFilePath(string filePath) {
-    clear();
-    ifstream file;
-    int graphSize = 0;
-    file.open(filePath);
-    file >> graphSize;
-
-    if (!file.good()) {
-        return false;
-    }
-
-    setupGraphWithSize(graphSize);
-    int i = 1;
-    while (i <= graphSize_)
-    {
-        addVertex(i);
-        i++;
-    }
-
-    int vertex1, vertex2;
-    while (file >> vertex1 >> vertex2) {
-        addEdge(vertex1, vertex2);
-    }
-
-    sortVertices();
-    return true;
-}
-
 int Graph::getGraphSize() {
     return graphSize_;
 }
@@ -240,10 +212,6 @@ void Graph::depthFirstSearch(
 			stack.push(neighborId);
 		}
 	}
-}
-
-void Graph::addEdge(int vertex1, int vertex2) {
-    graphEdgesNumber_++;
 }
 
 void Graph::setupGraphWithSize(int graphSize) {

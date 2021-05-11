@@ -26,7 +26,7 @@ public:
     int graphSize_ = 0;
     int graphEdgesNumber_ = 0;
 
-    bool loadGraphFromFilePath(string filePath);
+    virtual bool loadGraphFromFilePath(string filePath) = 0;
 
     int getGraphSize();
     int getGraphEdgesNumber();
@@ -53,7 +53,6 @@ public:
 protected:
     virtual void sortVertices() {}
     virtual vector<int> getNeighbors(int vertexIndex) = 0;
-    virtual void addEdge(int vertex1, int vertex2);
     virtual void setupGraphWithSize(int graphSize);
 
     void DFSUtil(int startNodeIndex, vector<int>& parent);

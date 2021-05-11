@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Graph.h"
+#include "UnweightedGraph.h"
 #include <forward_list>
 #include <vector>
 
-class ListGraph: public Graph
+class ListGraph: public UnweightedGraph
 {
 public:
     ListGraph();

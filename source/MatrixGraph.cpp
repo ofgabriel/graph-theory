@@ -2,7 +2,7 @@
 
 using namespace std;
 
-MatrixGraph::MatrixGraph() : Graph()
+MatrixGraph::MatrixGraph() : UnweightedGraph()
 {
     verticesMatrix_ = vector<vector<bool>>();
     verticesDegrees_ = vector<int>();
@@ -20,7 +20,7 @@ void MatrixGraph::addVertex(int index) {
 }
 
 void MatrixGraph::addEdge(int vertex1, int vertex2) {
-    Graph::addEdge(vertex1, vertex2);
+    UnweightedGraph::addEdge(vertex1, vertex2);
 
     verticesDegrees_[vertex1 - 1] += 1;
     verticesDegrees_[vertex2 - 1] += 1;

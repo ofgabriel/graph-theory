@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Graph.h"
+#include "UnweightedGraph.h"
 #include <vector>
 
-class MatrixGraph : public Graph
+class MatrixGraph : public UnweightedGraph
 {
 public:
     MatrixGraph();
