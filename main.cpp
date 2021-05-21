@@ -12,10 +12,10 @@
 
 using namespace std;
 
-void timeBreadthFirstSearch(Graph& graph, int iterations);
-void timeDepthFirstSearch(Graph& graph, int iterations);
-int caseStudy(Graph& graph);
-int interactiveUsage(Graph& graph);
+void timeBreadthFirstSearch(UnweightedGraph& graph, int iterations);
+void timeDepthFirstSearch(UnweightedGraph& graph, int iterations);
+int caseStudy(UnweightedGraph& graph);
+int interactiveUsage(UnweightedGraph& graph);
 
 int main(void) {
 	string path;
@@ -35,7 +35,7 @@ int main(void) {
 	cout << "	2 - Adjancecy matrix;\n";
 	cin >> dataStructure;
 
-	Graph* graph;
+	UnweightedGraph* graph;
 	if (dataStructure == 1) {
 		graph = new ListGraph();
 	} else if (dataStructure == 2) {
@@ -80,7 +80,7 @@ int main(void) {
     return 0;
 }
 
-void timeBreadthFirstSearch(Graph& graph, int iterations)
+void timeBreadthFirstSearch(UnweightedGraph& graph, int iterations)
 {
     auto graphSize = graph.getGraphSize();
 	INIT_TIMER();
@@ -102,7 +102,7 @@ void timeBreadthFirstSearch(Graph& graph, int iterations)
     PRINT_TIMER("Timing BFS", iterations);
 }
 
-void timeDepthFirstSearch(Graph& graph, int iterations)
+void timeDepthFirstSearch(UnweightedGraph& graph, int iterations)
 {
     auto graphSize = graph.getGraphSize();
 	INIT_TIMER();
@@ -124,7 +124,7 @@ void timeDepthFirstSearch(Graph& graph, int iterations)
     PRINT_TIMER("Timing DFS", iterations);
 }
 
-int caseStudy(Graph& graph)
+int caseStudy(UnweightedGraph& graph)
 {
     int initialVertices[3] = {1, 2, 3};
     int targetParents[3] = {10, 20, 30};
@@ -195,7 +195,7 @@ int caseStudy(Graph& graph)
     return 0;
 }
 
-int interactiveUsage(Graph& graph) {
+int interactiveUsage(UnweightedGraph& graph) {
     cout << "Writing results to file `graph_analysis.txt`...";
 
     ofstream output;

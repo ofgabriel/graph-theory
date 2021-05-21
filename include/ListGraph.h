@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Graph.h"
+#include "UnweightedGraph.h"
 #include <forward_list>
 #include <vector>
 
-class ListGraph: public Graph
+class ListGraph: public UnweightedGraph
 {
 public:
     ListGraph();
@@ -13,10 +13,12 @@ protected:
     void addVertex(int index) override;
     void clear() override;
     int getVerticeDegree(int vertexIndex) override;
-    void sortVertices() override;
     void addEdge(int vertex1, int vertex2) override;
     vector<int> getNeighbors(int vertexIndex) override;
     void setupGraphWithSize(int graphSize) override;
+
+    void sortVertices() override;
+
 private:
     vector<vector<int> > verticesList_;
 };

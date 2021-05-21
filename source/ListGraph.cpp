@@ -3,7 +3,7 @@
 
 using namespace std;
 
-ListGraph::ListGraph() : Graph()
+ListGraph::ListGraph() : UnweightedGraph()
 {
     verticesList_ = vector<vector<int>>();
 }
@@ -18,7 +18,7 @@ void ListGraph::addVertex(int index) {
 }
 
 void ListGraph::addEdge(int vertex1, int vertex2) {
-    Graph::addEdge(vertex1, vertex2);
+    UnweightedGraph::addEdge(vertex1, vertex2);
 
     verticesList_[vertex1 - 1].push_back(vertex2);
     verticesList_[vertex2 - 1].push_back(vertex1);
