@@ -23,6 +23,7 @@ protected:
     vector<Edge> getNeighbors(int vertexIndex);
     void setupGraphWithSize(int graphSize) override;
 
+    vector<int> dijkstra(int initialVertex, int destVertex = -1);
     float prim(int initialVertex, vector<pair<int, Edge>>& mst);
     
 private:
