@@ -15,4 +15,9 @@ struct Edge
     {
         return (neighbor < other.neighbor);
     }
+
+    bool operator > (const Edge& other) const
+    {
+        return (weight > other.weight);
+    }
 };

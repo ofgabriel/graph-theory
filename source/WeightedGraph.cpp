@@ -1,6 +1,7 @@
 #include "WeightedGraph.h"
 #include <algorithm>
 #include <fstream>
+#include <queue>
 
 using namespace std;
 
@@ -84,4 +85,50 @@ float WeightedGraph::getGraphDiameter()
 int WeightedGraph::getVerticeDegree(int nodeId)
 {
 
+}
+
+float WeightedGraph::prim(int initialVertex, vector<pair<int, Edge>>& mst)
+{
+    float mstCost = 0;
+    const float inf = 10000000.0f;
+    auto inMst = vector<bool>(getGraphSize());
+    auto cost = vector<double>(getGraphSize(), inf);
+    priority_queue<Edge, vector<Edge>, greater<Edge>> queue;
+    queue.push(Edge(initialVertex, 0));
+
+    while(!queue.empty())
+    {
+        auto edge = queue.top();
+        queue.pop();
+
+        inMst[edge.neighbor - 1] = true;
+        mstCost += edge.weight;
+        
+        auto neighbors = getNeighbors(edge.neighbor);
+		for (auto neighborEdge : neighbors)
+        {
+            auto neighborId = neighborEdge.neighbor;
+            if (!inMst[neighborId - 1] && cost[neighborId - 1] > neighborEdge.weight)
+            {
+                auto newEdge = Edge(neighborId, neighborEdge.weight);
+                cost[neighborId - 1] = neighborEdge.weight;
+                mst[edge.neighbor - 1] = make_pair(edge.neighbor, newEdge);
+                queue.push(newEdge);
+            }
+		}        
+    }
+    
+    for (int i = 0; i < getGraphSize(); i++)
+	{
+		if (cost[i] != inf)
+		{
+			mstCost += cost[i];
+		}
+	}
+    return mstCost;
+}
+
+float WeightedGraph::mst(int initialVertex, vector<pair<int, Edge>>& result)
+{
+    return prim(initialVertex, result);
 }

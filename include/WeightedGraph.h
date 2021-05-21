@@ -13,6 +13,7 @@ public:
     
     float getGraphDiameter() override;
     int getVerticeDegree(int nodeId) override;
+    float mst(int initialVertex, vector<pair<int, Edge>>& mst);
 
 protected:
     void addVertex(int index) override;
@@ -22,6 +23,8 @@ protected:
     vector<Edge> getNeighbors(int vertexIndex);
     void setupGraphWithSize(int graphSize) override;
 
+    float prim(int initialVertex, vector<pair<int, Edge>>& mst);
+    
 private:
     vector<vector<Edge>> verticesList_;
 };

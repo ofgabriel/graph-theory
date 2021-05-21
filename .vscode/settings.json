@@ -49,6 +49,8 @@
         "sstream": "cpp",
         "stdexcept": "cpp",
         "streambuf": "cpp",
-        "climits": "cpp"
+        "climits": "cpp",
+        "compare": "cpp",
+        "ranges": "cpp"
     }
 }
