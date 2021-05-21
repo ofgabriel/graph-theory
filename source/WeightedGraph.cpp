@@ -33,17 +33,55 @@ bool WeightedGraph::loadGraphFromFilePath(string filePath) {
         i++;
     }
 
-    int sourceNode, destinationNode;
+    int vertex1, vertex2;
     float edgeWeight;
-    while (file >> sourceNode >> destinationNode >> edgeWeight) {
-        addEdge(sourceNode, destinationNode, edgeWeight);
+    while (file >> vertex1 >> vertex2 >> edgeWeight) {
+        addEdge(vertex1, vertex2, edgeWeight);
     }
 
     sortVertices();
     return true;
 }
 
-void WeightedGraph::addEdge(int source, int destination, float weight) {
+void WeightedGraph::addEdge(int vertex1, int vertex2, float weight) {
     graphEdgesNumber_++;
+
+    verticesList_[vertex1 - 1].push_back(Edge(vertex2, weight));
+    verticesList_[vertex2 - 1].push_back(Edge(vertex1, weight));
+}
+
+void WeightedGraph::sortVertices() {
+    for (int i = 0; i < getGraphSize(); i++) {
+        sort(verticesList_[i].begin(), verticesList_[i].end());
+    }
+}
+
+float WeightedGraph::getEccentricity(int nodeId)
+{
+    return 0;
+}
+
+vector<Edge> WeightedGraph::getNeighbors(int vertexIndex)
+{
+
+}
+
+void WeightedGraph::addVertex(int index)
+{
+
+}
+
+void WeightedGraph::setupGraphWithSize(int graphSize)
+{
+
+}
+
+
+float WeightedGraph::getGraphDiameter()
+{
+}
+
+int WeightedGraph::getVerticeDegree(int nodeId)
+{
 
 }

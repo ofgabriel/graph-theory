@@ -2,14 +2,17 @@
 
 struct Edge
 {
-	int source;
-	int destination;
+	int neighbor;
 	float weight;
 
-	Edge(int source, int destination, float weight)
+	Edge(int neighbor, float weight)
 	{
-		this->source = source;
-		this->destination = destination;
+		this->neighbor = neighbor;
 		this->weight = weight;
 	}
+
+    bool operator < (const Edge& other) const
+    {
+        return (neighbor < other.neighbor);
+    }
 };

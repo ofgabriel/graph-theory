@@ -15,17 +15,12 @@
 
 using namespace std;
 
+
 class Graph
 {
 public:
     Graph();
     
-    virtual void clear();
-    virtual void addVertex(int index) = 0;
-
-    int graphSize_ = 0;
-    int graphEdgesNumber_ = 0;
-
     virtual bool loadGraphFromFilePath(string filePath) = 0;
 
     int getGraphSize();
@@ -34,27 +29,16 @@ public:
     int getGraphMaximumDegree();
     float getGraphMeanDegree();
     int getGraphMedianDegree();
-    int getGraphDiameter();
-    int getDistance(int nodeId1, int nodeId2);
 
+    virtual float getGraphDiameter() = 0;
     virtual int getVerticeDegree(int nodeId) = 0;
-    list<list<int> > getConnectedComponents();
 
-    void breadthFirstSearch(
-        int initialVertexIndex,
-        vector<int>& parent,
-        vector<int>& level
-    );
-    void depthFirstSearch(
-        int initialVertexIndex,
-        vector<int>& parent,
-        vector<int>& level
-    );
 protected:
-    virtual void sortVertices() {}
-    virtual vector<int> getNeighbors(int vertexIndex) = 0;
-    virtual void setupGraphWithSize(int graphSize);
+    int graphSize_ = 0;
+    int graphEdgesNumber_ = 0;
 
-    void DFSUtil(int startNodeIndex, vector<int>& parent);
-    int BFSUtil(int startNodeIndex, vector<int>& level, int goalIndex);
+    virtual void addVertex(int index) = 0;
+    virtual void clear();
+    virtual void sortVertices() {}
+    virtual void setupGraphWithSize(int graphSize);
 };
