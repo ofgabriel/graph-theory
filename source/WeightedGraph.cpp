@@ -64,7 +64,7 @@ float WeightedGraph::getEccentricity(int nodeId)
 
 vector<Edge> WeightedGraph::getNeighbors(int vertexIndex)
 {
-
+    return verticesList_[vertexIndex - 1];
 }
 
 void WeightedGraph::addVertex(int index)
