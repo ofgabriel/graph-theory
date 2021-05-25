@@ -74,7 +74,8 @@ void WeightedGraph::addVertex(int index)
 
 void WeightedGraph::setupGraphWithSize(int graphSize)
 {
-
+    Graph::setupGraphWithSize(graphSize);
+    verticesList_.resize(graphSize);
 }
 
 
