@@ -88,7 +88,7 @@ int WeightedGraph::getVerticeDegree(int nodeId)
 
 }
 
-vector<int> WeightedGraph::dijkstra(int initialVertex, int destVertex = -1)
+vector<float> WeightedGraph::dijkstra(int initialVertex, int destVertex = -1)
 {
     // if (initialVertex > getGraphSize()) {
     //     return vector<int>::empty;
@@ -96,7 +96,7 @@ vector<int> WeightedGraph::dijkstra(int initialVertex, int destVertex = -1)
     float inf = 10000000.0f;
 
     priority_queue<Edge, vector<Edge>, greater<Edge>> queue;
-    vector<int> dist(getGraphSize(), inf);
+    vector<float> dist(getGraphSize(), inf);
 
     queue.push(Edge(initialVertex, 0));
     dist[initialVertex] = 0;
