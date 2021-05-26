@@ -51,6 +51,8 @@
         "streambuf": "cpp",
         "climits": "cpp",
         "compare": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "concepts": "cpp",
+        "iomanip": "cpp"
     }
 }
