@@ -1,7 +1,7 @@
 #include "WeightedGraph.h"
 #include <algorithm>
 #include <fstream>
-#include <queue>
+#include "FibonacciQueue.h"
 
 using namespace std;
 
@@ -87,21 +87,21 @@ int WeightedGraph::getVerticeDegree(int nodeId)
 
 }
 
-vector<int> WeightedGraph::dijkstra(int initialVertex, int destVertex = -1)
+vector<int> WeightedGraph::dijkstra(int initialVertex, int destVertex)
 {
     // if (initialVertex > getGraphSize()) {
     //     return vector<int>::empty;
     // }
     float inf = 10000000.0f;
 
-    priority_queue<Edge, vector<Edge>, greater<Edge>> queue;
+    FibonacciQueue<float, int> queue;
     vector<int> dist(getGraphSize(), inf);
 
-    queue.push(Edge(initialVertex, 0));
+    queue.push(0, initialVertex);
     dist[initialVertex] = 0;
 
     while (!queue.empty()) {
-        auto vertexId = queue.top().neighbor;
+        auto vertexId = queue.top();
         queue.pop();
 
         if (vertexId == destVertex)
@@ -111,9 +111,18 @@ vector<int> WeightedGraph::dijkstra(int initialVertex, int destVertex = -1)
 
         auto neighbors = getNeighbors(vertexId);
         for (auto neighborEdge : neighbors) {
-            if (dist[neighborEdge.neighbor] > dist[vertexId] + neighborEdge.weight) {
-                dist[neighborEdge.neighbor] = dist[vertexId] + neighborEdge.weight;
-                queue.push(Edge(neighborEdge.neighbor, dist[vertexId]));
+            if (dist[neighborEdge.neighbor] > dist[vertexId] + neighborEdge.weight)
+            {
+                auto newWeight = dist[vertexId] + neighborEdge.weight;
+                if (dist[neighborEdge.neighbor] == inf)
+                {
+                    queue.decrease_key(neighborEdge.neighbor, newWeight);
+                }
+                else
+                {
+                    queue.push(newWeight, neighborEdge.neighbor);
+                }
+                dist[neighborEdge.neighbor] = newWeight;
             }
         }
     }
@@ -127,28 +136,41 @@ float WeightedGraph::prim(int initialVertex, vector<pair<int, Edge>>& mst)
     const float inf = 10000000.0f;
     auto inMst = vector<bool>(getGraphSize());
     auto cost = vector<double>(getGraphSize(), inf);
-    priority_queue<Edge, vector<Edge>, greater<Edge>> queue;
-    queue.push(Edge(initialVertex, 0));
+    FibonacciQueue<float, int> queue;
+    queue.push(0, initialVertex);
 
     while(!queue.empty())
     {
-        auto edge = queue.top();
+        auto edge = queue.topNode();
         queue.pop();
 
-        inMst[edge.neighbor - 1] = true;
-        mstCost += edge.weight;
+        int vertexId = edge->payload;
+        int weight = edge->key;
+
+        inMst[vertexId - 1] = true;
+        mstCost += weight;
         
-        auto neighbors = getNeighbors(edge.neighbor);
+        auto neighbors = getNeighbors(vertexId);
 		for (auto neighborEdge : neighbors)
         {
             auto neighborId = neighborEdge.neighbor;
-            if (!inMst[neighborId - 1] && cost[neighborId - 1] > neighborEdge.weight)
+            if (inMst[neighborId - 1])
             {
-                auto newEdge = Edge(neighborId, neighborEdge.weight);
-                cost[neighborId - 1] = neighborEdge.weight;
-                mst[edge.neighbor - 1] = make_pair(edge.neighbor, newEdge);
-                queue.push(newEdge);
+                continue;
             }
+
+            auto newEdge = Edge(neighborId, neighborEdge.weight);
+            if (cost[neighborId - 1] == inf)
+            {
+                queue.push(newEdge.weight, newEdge.neighbor);
+            }
+            else if (cost[neighborId - 1] > neighborEdge.weight)
+            {
+                queue.decrease_key(edge, neighborEdge.weight);
+            }
+
+            cost[neighborId - 1] = neighborEdge.weight;
+            mst[vertexId - 1] = make_pair(vertexId, newEdge);
 		}        
     }
     
