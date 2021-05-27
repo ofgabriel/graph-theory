@@ -39,11 +39,16 @@ int main(void) {
 
         graph->loadGraphFromFilePath("./assets/grafo_W_1.txt");
 
-        for (auto dist : graph->dijkstra(1, -1)) {
-            cout << setprecision(10) << "Dist from 1 to x: " << dist << "\n";
-        }
+        auto dist = graph->dijkstra(1, -1);
+
+        cout << setprecision(10) << "Dist from 1 to 10: " << dist[10] << "\n";
+        cout << setprecision(10) << "Dist from 1 to 20: " << dist[20] << "\n";
+        cout << setprecision(10) << "Dist from 1 to 30: " << dist[30] << "\n";
+        cout << setprecision(10) << "Dist from 1 to 40: " << dist[40] << "\n";
+        cout << setprecision(10) << "Dist from 1 to 50: " << dist[50] << "\n";
+
+        return 0;
     }
-    return 0;
 
     cout << "Pick an execution mode:\n";
 	cout << "	1 - Case studies;\n";
