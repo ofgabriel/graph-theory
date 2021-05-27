@@ -11,7 +11,7 @@ public:
     class Node
     {
     public:
-        Node(TKey k, TValue value) : key(std::move(k)),
+        Node(TKey k, TValue value) : key(k),
                                   mark(false),
                                   p(nullptr),
                                   left(nullptr),
@@ -266,7 +266,7 @@ protected:
             //error( "new key is greater than current key" );
             return;
         }
-        x->key = std::move(k);
+        x->key = k;
         y = x->p;
         if (y != nullptr && m_Comparator(x->key, y->key))
         {

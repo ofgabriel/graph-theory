@@ -10,19 +10,20 @@ class FibonacciQueue : private FibonacciHeap<TKey, TValue, TComp>
 private:
     using Heap = FibonacciHeap<TKey, TValue, TComp>;
     using Node = typename FibonacciHeap<TKey, TValue, TComp>::Node;
-    using KeyNodeIter = typename std::unordered_map<TKey, Node *>::iterator;
+    using ValueNodeIter = typename std::unordered_map<TValue, Node *>::iterator;
 
-    std::unordered_multimap<TKey, Node *> m_KeyStore;
+    std::unordered_multimap<TValue, Node*> m_ValueStore;
 
 public:
     FibonacciQueue()
-        : Heap()
+        : FibonacciQueue(TComp())
     {
     }
 
     FibonacciQueue(TComp comp)
         : Heap(comp)
     {
+        m_ValueStore = std::unordered_multimap<TValue, Node*>();
     }
 
     ~FibonacciQueue()
@@ -39,50 +40,50 @@ public:
         return Heap::minimum();
     }
 
-    TKey &top()
+    TValue &top()
     {
-        return Heap::minimum()->key;
+        return Heap::minimum()->payload;
     }
 
 
     void decrease_key(Node*node, TKey k)
     {
-        KeyNodeIter mit = m_KeyStore.find(node->key);
-        m_KeyStore.erase(mit);
-        m_KeyStore.insert({ k, node });
-        Heap::decrease_key(node, std::move(k));
+        ValueNodeIter mit = find(node->payload);
+        m_ValueStore.erase(mit);
+        m_ValueStore.insert({ node->payload, node });
+        Heap::decrease_key(node, k);
     }
 
-    void decrease_key(TKey originalKey, TKey k)
+    void decrease_key(TValue value, TKey k)
     {
-        auto node = findNode(originalKey);
-        this->decrease_key(node, std::move(k));
+        auto node = findNode(value);
+        this->decrease_key(node, k);
     }
 
     Node *push(TKey k, TValue pl)
     {
-        Node *x = new Node(std::move(k), pl);
+        Node *x = new Node(k, pl);
         Heap::insert(x);
-        m_KeyStore.insert({k, x});
+        m_ValueStore.insert({pl, x});
         return x;
-    }
-
-    KeyNodeIter find(const TKey &k)
-    {
-        KeyNodeIter mit = m_KeyStore.find(k);
-        return mit;
     }
 
     int count(const TKey &k)
     {
-        KeyNodeIter mit = m_KeyStore.find(k);
-        return mit != m_KeyStore.end();
+        ValueNodeIter mit = m_ValueStore.find(k);
+        return mit != m_ValueStore.end();
     }
 
-    Node *findNode(const TKey &k)
+    Node *findNode(TValue value)
     {
-        KeyNodeIter mit = find(k);
+        ValueNodeIter mit = find(value);
         return mit->second;
+    }
+
+    ValueNodeIter find(const TValue &k)
+    {
+        ValueNodeIter mit = m_ValueStore.find(k);
+        return mit;
     }
 
     void pop()
@@ -92,13 +93,13 @@ public:
         Node *x = Heap::extract_min();
         if (!x)
             return; // should not happen.
-        auto range = m_KeyStore.equal_range(x->key);
+        auto range = m_ValueStore.equal_range(x->key);
         auto mit = std::find_if(range.first, range.second,
                                 [x](const std::pair<TKey, Node *> &ele) {
                                     return ele.second == x;
                                 });
         if (mit != range.second)
-            m_KeyStore.erase(mit);
+            m_ValueStore.erase(mit);
         else
             std::cerr << "[Error]: key " << x->key << " cannot be found in FiboQueue fast store\n";
         delete x;
@@ -107,6 +108,6 @@ public:
     void clear() override
     {
         Heap::clear();
-        m_KeyStore.clear();
+        m_ValueStore.clear();
     }
 };
