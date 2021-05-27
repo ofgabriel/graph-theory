@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <vector>
 #include <list>
+#include "LabelProvider.h"
 
 #define BUILDING_DLL
 
@@ -32,6 +33,7 @@ public:
 
     virtual float getGraphDiameter() = 0;
     virtual int getVerticeDegree(int nodeId) = 0;
+    void printPath(ostream& output, vector<int> path, LabelProvider *labelProvider);
 
 protected:
     int graphSize_ = 0;

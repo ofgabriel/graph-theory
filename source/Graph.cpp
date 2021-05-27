@@ -82,3 +82,21 @@ int Graph::getGraphMedianDegree() {
 void Graph::setupGraphWithSize(int graphSize) {
     graphSize_ = graphSize;
 }
+
+void Graph::printPath(ostream& output, vector<int> path, LabelProvider *labelProvider)
+{
+    auto getLabel = [labelProvider](int vertex)
+    {
+        if (labelProvider == nullptr)
+        {
+            return to_string(vertex);
+        }
+        return labelProvider->getLabel(vertex);
+    };
+    
+    for (auto vertex : path)
+    {
+        output << getLabel(vertex) << ", "; 
+    }
+    output << endl;
+}
