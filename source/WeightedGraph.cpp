@@ -1,6 +1,7 @@
 #include "WeightedGraph.h"
 #include <algorithm>
 #include <fstream>
+#include <limits>
 #include "FibonacciQueue.h"
 
 using namespace std;
@@ -93,7 +94,7 @@ vector<float> WeightedGraph::dijkstra(int initialVertex, int destVertex)
     // if (initialVertex > getGraphSize()) {
     //     return vector<int>::empty;
     // }
-    float inf = 10000000.0f;
+    float inf = numeric_limits<float>::max();
 
     FibonacciQueue<float, int> queue;
     vector<float> dist(getGraphSize(), inf);
