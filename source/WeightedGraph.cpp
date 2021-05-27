@@ -117,11 +117,11 @@ vector<float> WeightedGraph::dijkstra(int initialVertex, int destVertex)
                 auto newWeight = dist[vertexId] + neighborEdge.weight;
                 if (dist[neighborEdge.neighbor] == inf)
                 {
-                    queue.decrease_key(neighborEdge.neighbor, newWeight);
+                    queue.push(newWeight, neighborEdge.neighbor);
                 }
                 else
                 {
-                    queue.push(newWeight, neighborEdge.neighbor);
+                    queue.decrease_key(neighborEdge.neighbor, newWeight);
                 }
                 dist[neighborEdge.neighbor] = newWeight;
             }
@@ -146,7 +146,7 @@ float WeightedGraph::prim(int initialVertex, vector<pair<int, Edge>>& mst)
         queue.pop();
 
         int vertexId = edge->payload;
-        int weight = edge->key;
+        float weight = edge->key;
 
         inMst[vertexId - 1] = true;
         mstCost += weight;
@@ -167,7 +167,7 @@ float WeightedGraph::prim(int initialVertex, vector<pair<int, Edge>>& mst)
             }
             else if (cost[neighborId - 1] > neighborEdge.weight)
             {
-                queue.decrease_key(edge, neighborEdge.weight);
+                queue.decrease_key(neighborId, neighborEdge.weight);
             }
 
             cost[neighborId - 1] = neighborEdge.weight;
