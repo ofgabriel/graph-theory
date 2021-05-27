@@ -2,6 +2,7 @@
 #include "Memory.h"
 #include "ListGraph.h"
 #include "MatrixGraph.h"
+#include "WeightedGraph.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -21,14 +22,38 @@ int main(void) {
 	string path;
     int executionMode;
 	int dataStructure;
+    int graphType;
+
+    cout << "What type of undirected graph do you wish to import?\n";
+	cout << "	1 - Weighted;\n";
+	cout << "	2 - Unweighted;\n";
+	cin >> graphType;
+
+	// cout << "Type the graph file path\n";
+	// cin >> path;
+
+    if (graphType == 2) {
+	    WeightedGraph* graph;
+
+        graph = new WeightedGraph();
+
+        graph->loadGraphFromFilePath("./assets/grafo_W_1.txt");
+
+        auto dist = graph->dijkstra(1, -1);
+
+        cout << setprecision(10) << "Dist from 1 to 10: " << dist[10] << "\n";
+        cout << setprecision(10) << "Dist from 1 to 20: " << dist[20] << "\n";
+        cout << setprecision(10) << "Dist from 1 to 30: " << dist[30] << "\n";
+        cout << setprecision(10) << "Dist from 1 to 40: " << dist[40] << "\n";
+        cout << setprecision(10) << "Dist from 1 to 50: " << dist[50] << "\n";
+
+        return 0;
+    }
 
     cout << "Pick an execution mode:\n";
 	cout << "	1 - Case studies;\n";
 	cout << "	2 - Interactive library;\n";
 	cin >> executionMode;
-
-	cout << "Type the graph file path\n";
-	cin >> path;
 
 	cout << "Pick a structure for representing your graph:\n";
 	cout << "	1 - Adjacency list;\n";

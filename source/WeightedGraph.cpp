@@ -1,6 +1,7 @@
 #include "WeightedGraph.h"
 #include <algorithm>
 #include <fstream>
+#include <limits>
 #include "FibonacciQueue.h"
 
 using namespace std;
@@ -64,7 +65,7 @@ float WeightedGraph::getEccentricity(int nodeId)
 
 vector<Edge> WeightedGraph::getNeighbors(int vertexIndex)
 {
-
+    return verticesList_[vertexIndex - 1];
 }
 
 void WeightedGraph::addVertex(int index)
@@ -74,7 +75,8 @@ void WeightedGraph::addVertex(int index)
 
 void WeightedGraph::setupGraphWithSize(int graphSize)
 {
-
+    Graph::setupGraphWithSize(graphSize);
+    verticesList_.resize(graphSize);
 }
 
 
@@ -87,12 +89,12 @@ int WeightedGraph::getVerticeDegree(int nodeId)
 
 }
 
-vector<int> WeightedGraph::dijkstra(int initialVertex, int destVertex)
+vector<float> WeightedGraph::dijkstra(int initialVertex, int destVertex)
 {
     // if (initialVertex > getGraphSize()) {
     //     return vector<int>::empty;
     // }
-    float inf = 10000000.0f;
+    float inf = numeric_limits<float>::max();
 
     FibonacciQueue<float, int> queue;
     vector<float> dist(getGraphSize(), inf);

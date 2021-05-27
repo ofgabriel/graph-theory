@@ -93,15 +93,15 @@ public:
         Node *x = Heap::extract_min();
         if (!x)
             return; // should not happen.
-        auto range = m_ValueStore.equal_range(x->key);
+        auto range = m_ValueStore.equal_range(x->payload);
         auto mit = std::find_if(range.first, range.second,
-                                [x](const std::pair<TKey, Node *> &ele) {
+                                [x](const std::pair<TValue, Node *> &ele) {
                                     return ele.second == x;
                                 });
         if (mit != range.second)
             m_ValueStore.erase(mit);
         else
-            std::cerr << "[Error]: key " << x->key << " cannot be found in FiboQueue fast store\n";
+            std::cerr << "[Error]: value " << x->payload << " cannot be found in FiboQueue fast store\n";
         delete x;
     }
 
