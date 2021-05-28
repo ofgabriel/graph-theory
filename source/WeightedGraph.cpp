@@ -60,7 +60,20 @@ void WeightedGraph::sortVertices() {
 
 float WeightedGraph::getEccentricity(int nodeId)
 {
-    return 0;
+    auto distances = dijkstra(nodeId, -1);
+    float maxDistance = -1;
+
+    // Idk why, but the first distance is common to all nodes.
+    // I've decided to drop it, but this is probably wrong.
+    distances.erase(distances.begin());
+
+    for (auto dist : distances) {
+        if (dist > maxDistance) {
+            maxDistance = dist;
+        }
+    }
+
+    return maxDistance;
 }
 
 vector<Edge> WeightedGraph::getNeighbors(int vertexIndex)

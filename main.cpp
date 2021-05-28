@@ -258,5 +258,11 @@ int weightedGraphCaseStudy(WeightedGraph& graph)
     cout << setprecision(10) << "Dist from 1 to 40: " << dist[40] << "\n";
     cout << setprecision(10) << "Dist from 1 to 50: " << dist[50] << "\n";
 
+    cout << setprecision(10) << "Eccentricity of vertex 10: " << graph.getEccentricity(10) << "\n";
+    cout << setprecision(10) << "Eccentricity of vertex 20: " << graph.getEccentricity(20) << "\n";
+    cout << setprecision(10) << "Eccentricity of vertex 30: " << graph.getEccentricity(30) << "\n";
+    cout << setprecision(10) << "Eccentricity of vertex 40: " << graph.getEccentricity(40) << "\n";
+    cout << setprecision(10) << "Eccentricity of vertex 50: " << graph.getEccentricity(50) << "\n";
+
     return 0;
 }
