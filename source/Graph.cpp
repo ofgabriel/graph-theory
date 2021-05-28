@@ -5,11 +5,31 @@
 #include <queue>
 #include <climits>
 #include <stack>
+#include <sstream>
+#include <string>
 
 using namespace std;
 
 Graph::Graph()
 {
+}
+
+bool Graph::isWeightedGraph(string filePath)
+{
+    ifstream file(filePath);
+    string firstLine, secondLine;
+    int numberOfColumns = 0;
+
+    getline(file, firstLine);
+    getline(file, secondLine);
+
+    stringstream s(secondLine);
+
+    float value;
+
+    while(s >> value) numberOfColumns++;
+
+    return numberOfColumns == 3;
 }
 
 void Graph::clear()

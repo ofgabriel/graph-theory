@@ -21,6 +21,8 @@ class Graph
 {
 public:
     Graph();
+
+    static bool isWeightedGraph(string filePath);
     
     virtual bool loadGraphFromFilePath(string filePath) = 0;
 
