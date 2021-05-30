@@ -13,7 +13,7 @@ public:
     
     float getGraphDiameter() override;
     int getVerticeDegree(int nodeId) override;
-    float mst(int initialVertex, vector<pair<int, Edge>>& mst);
+    vector<pair<int, Edge>> mst(int initialVertex, float* mstCost = nullptr);
 
     vector<float> dijkstra(int initialVertex, int destVertex);
 
@@ -25,7 +25,7 @@ protected:
     vector<Edge> getNeighbors(int vertexIndex);
     void setupGraphWithSize(int graphSize) override;
 
-    float prim(int initialVertex, vector<pair<int, Edge>>& mst);
+    vector<pair<int, Edge>> prim(int initialVertex, float* mstCost);
     
 private:
     vector<vector<Edge>> verticesList_;

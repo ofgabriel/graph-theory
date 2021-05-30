@@ -19,6 +19,7 @@ void timeEccentricity(WeightedGraph& graph, int iterations);
 int caseStudy(UnweightedGraph& graph);
 int weightedGraphCaseStudy(WeightedGraph& graph);
 int interactiveUsage(UnweightedGraph& graph);
+void getMst(ostream& output, WeightedGraph& graph);
 
 int main(void) {
 	string path = "./assets/grafo_W_1.txt";
@@ -267,6 +268,8 @@ int weightedGraphCaseStudy(WeightedGraph& graph)
 
     timeEccentricity(graph, 100);
 
+    getMst(cout, graph);
+
     return 0;
 }
 
@@ -288,4 +291,16 @@ void timeEccentricity(WeightedGraph& graph, int iterations)
     
 	STOP_TIMER();
     PRINT_TIMER("Timing eccentricity", iterations);
+}
+
+void getMst(ostream& output, WeightedGraph& graph)
+{
+    float weight = 0;
+    auto mst = graph.mst(1, &weight);
+
+    output << weight;
+    for (auto edge : mst)
+    {
+        output << edge.first << edge.second.neighbor << edge.second.weight;
+    }
 }
