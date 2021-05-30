@@ -283,7 +283,7 @@ void timeEccentricity(WeightedGraph& graph, int iterations)
 	for (int i = 0; i < iterations; i++)
 	{
         auto startNode = uni(rng);
-        graph.dijkstra(startNode, -1);
+        graph.getEccentricity(startNode);
 	}
     
 	STOP_TIMER();
