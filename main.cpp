@@ -297,10 +297,6 @@ void getMst(ostream& output, WeightedGraph& graph)
 {
     float weight = 0;
     auto mst = graph.mst(1, &weight);
-
-    output << mst.size() << " " << weight << endl;
-    for (auto edge : mst)
-    {
-        output << edge.first << " " << edge.second.neighbor << " " << edge.second.weight << endl;
-    }
+    output << weight << endl;
+    WeightedGraph::printGraph(output, mst);
 }

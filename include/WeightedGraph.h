@@ -17,6 +17,8 @@ public:
 
     vector<float> dijkstra(int initialVertex, int destVertex);
 
+    static void printGraph(ostream& output, vector<pair<int, Edge>>& graph);
+    
 protected:
     void addVertex(int index) override;
     void addEdge(int vertex1, int vertex2, float weight);

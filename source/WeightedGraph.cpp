@@ -174,7 +174,7 @@ vector<pair<int, Edge>> WeightedGraph::prim(int initialVertex, float* mstCost)
         auto edge = queue.topNode();
         int vertexId = edge->payload;
         float weight = edge->key;
-        
+
         queue.pop();
 
         inMst[vertexId - 1] = true;
@@ -219,4 +219,17 @@ vector<pair<int, Edge>> WeightedGraph::prim(int initialVertex, float* mstCost)
 vector<pair<int, Edge>> WeightedGraph::mst(int initialVertex, float* mstCost)
 {
     return prim(initialVertex, mstCost);
+}
+
+void WeightedGraph::printGraph(ostream& output, vector<pair<int, Edge>>& graph)
+{
+    output << graph.size() << endl;
+    for (auto edge : graph)
+    {
+        if (edge.first == 0)
+        {
+            continue;
+        }
+        output << edge.first << " " << edge.second.neighbor << " " << edge.second.weight << endl;
+    }
 }
