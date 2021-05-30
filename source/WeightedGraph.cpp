@@ -216,9 +216,14 @@ vector<pair<int, Edge>> WeightedGraph::prim(int initialVertex, float* mstCost)
     return mst;
 }
 
-vector<pair<int, Edge>> WeightedGraph::mst(int initialVertex, float* mstCost)
+vector<pair<int, Edge>> WeightedGraph::mst(int initialVertex, float* mstCost, ostream* output)
 {
-    return prim(initialVertex, mstCost);
+    auto mst = prim(initialVertex, mstCost);
+    if (output != nullptr)
+    {
+        WeightedGraph::printGraph(*output, mst);
+    }
+    return mst;
 }
 
 void WeightedGraph::printGraph(ostream& output, vector<pair<int, Edge>>& graph, LabelProvider *labelProvider)
