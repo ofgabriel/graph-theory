@@ -221,8 +221,16 @@ vector<pair<int, Edge>> WeightedGraph::mst(int initialVertex, float* mstCost)
     return prim(initialVertex, mstCost);
 }
 
-void WeightedGraph::printGraph(ostream& output, vector<pair<int, Edge>>& graph)
+void WeightedGraph::printGraph(ostream& output, vector<pair<int, Edge>>& graph, LabelProvider *labelProvider)
 {
+    auto getLabel = [labelProvider](int vertex)
+    {
+        if (labelProvider == nullptr)
+        {
+            return to_string(vertex);
+        }
+        return labelProvider->getLabel(vertex);
+    };
     output << graph.size() << endl;
     for (auto edge : graph)
     {
@@ -230,6 +238,6 @@ void WeightedGraph::printGraph(ostream& output, vector<pair<int, Edge>>& graph)
         {
             continue;
         }
-        output << edge.first << " " << edge.second.neighbor << " " << edge.second.weight << endl;
+        output << getLabel(edge.first) << " " << getLabel(edge.second.neighbor) << " " << edge.second.weight << endl;
     }
 }
