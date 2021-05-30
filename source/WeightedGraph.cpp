@@ -3,8 +3,10 @@
 #include <fstream>
 #include <limits>
 #include "FibonacciQueue.h"
+#include "Timing.h"
 
 using namespace std;
+float inf = numeric_limits<float>::max();
 
 WeightedGraph::WeightedGraph() : Graph()
 {
@@ -91,20 +93,35 @@ void WeightedGraph::setupGraphWithSize(int graphSize)
 
 float WeightedGraph::getGraphDiameter()
 {
+    int diameter = 0;
+
+    INIT_TIMER();
+    START_TIMER();
+#pragma omp parallel for shared(diameter)
+    for (int i = 1; i <= getGraphSize(); i++)
+    {
+        vector<int> level(getGraphSize(), -1);
+        auto dist = dijkstra(i, -1);
+        for (auto d : dist)
+        {
+            if (d > diameter && d != inf)
+{
+                diameter = d;
+                STOP_TIMER();
+                PRINT_TIMER("Found bigger diameter: " << diameter, 1);
+            }
+        }
+    }
+    return diameter;
 }
 
 int WeightedGraph::getVerticeDegree(int nodeId)
 {
-
+    return verticesList_[nodeId - 1].size();
 }
 
 vector<float> WeightedGraph::dijkstra(int initialVertex, int destVertex)
 {
-    // if (initialVertex > getGraphSize()) {
-    //     return vector<int>::empty;
-    // }
-    float inf = numeric_limits<float>::max();
-
     FibonacciQueue<float, int> queue;
     vector<float> dist(getGraphSize(), inf);
 
