@@ -172,10 +172,10 @@ vector<pair<int, Edge>> WeightedGraph::prim(int initialVertex, float* mstCost)
     while(!queue.empty())
     {
         auto edge = queue.topNode();
-        queue.pop();
-
         int vertexId = edge->payload;
         float weight = edge->key;
+        
+        queue.pop();
 
         inMst[vertexId - 1] = true;
         
