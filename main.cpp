@@ -15,6 +15,7 @@ using namespace std;
 
 void timeBreadthFirstSearch(UnweightedGraph& graph, int iterations);
 void timeDepthFirstSearch(UnweightedGraph& graph, int iterations);
+void timeEccentricity(WeightedGraph& graph, int iterations);
 int caseStudy(UnweightedGraph& graph);
 int weightedGraphCaseStudy(WeightedGraph& graph);
 int interactiveUsage(UnweightedGraph& graph);
@@ -264,5 +265,27 @@ int weightedGraphCaseStudy(WeightedGraph& graph)
     cout << setprecision(10) << "Eccentricity of vertex 40: " << graph.getEccentricity(40) << "\n";
     cout << setprecision(10) << "Eccentricity of vertex 50: " << graph.getEccentricity(50) << "\n";
 
+    timeEccentricity(graph, 100);
+
     return 0;
+}
+
+void timeEccentricity(WeightedGraph& graph, int iterations)
+{
+    auto graphSize = graph.getGraphSize();
+	INIT_TIMER();
+	START_TIMER();
+
+    std::random_device rd;     // only used once to initialise (seed) engine
+    std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
+    std::uniform_int_distribution<int> uni(1, graphSize + 1); // guaranteed unbiased
+
+	for (int i = 0; i < iterations; i++)
+	{
+        auto startNode = uni(rng);
+        graph.getEccentricity(startNode);
+	}
+    
+	STOP_TIMER();
+    PRINT_TIMER("Timing eccentricity", iterations);
 }

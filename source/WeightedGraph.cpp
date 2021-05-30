@@ -3,8 +3,10 @@
 #include <fstream>
 #include <limits>
 #include "FibonacciQueue.h"
+#include "Timing.h"
 
 using namespace std;
+float inf = numeric_limits<float>::max();
 
 WeightedGraph::WeightedGraph() : Graph()
 {
@@ -63,10 +65,6 @@ float WeightedGraph::getEccentricity(int nodeId)
     auto distances = dijkstra(nodeId, -1);
     float maxDistance = -1;
 
-    // Idk why, but the first distance is common to all nodes.
-    // I've decided to drop it, but this is probably wrong.
-    distances.erase(distances.begin());
-
     for (auto dist : distances) {
         if (dist > maxDistance) {
             maxDistance = dist;
@@ -95,25 +93,40 @@ void WeightedGraph::setupGraphWithSize(int graphSize)
 
 float WeightedGraph::getGraphDiameter()
 {
+    int diameter = 0;
+
+    INIT_TIMER();
+    START_TIMER();
+#pragma omp parallel for shared(diameter)
+    for (int i = 1; i <= getGraphSize(); i++)
+    {
+        vector<int> level(getGraphSize(), -1);
+        auto dist = dijkstra(i, -1);
+        for (auto d : dist)
+        {
+            if (d > diameter && d != inf)
+{
+                diameter = d;
+                STOP_TIMER();
+                PRINT_TIMER("Found bigger diameter: " << diameter, 1);
+            }
+        }
+    }
+    return diameter;
 }
 
 int WeightedGraph::getVerticeDegree(int nodeId)
 {
-
+    return verticesList_[nodeId - 1].size();
 }
 
 vector<float> WeightedGraph::dijkstra(int initialVertex, int destVertex)
 {
-    // if (initialVertex > getGraphSize()) {
-    //     return vector<int>::empty;
-    // }
-    float inf = numeric_limits<float>::max();
-
     FibonacciQueue<float, int> queue;
     vector<float> dist(getGraphSize(), inf);
 
     queue.push(0, initialVertex);
-    dist[initialVertex] = 0;
+    dist[initialVertex - 1] = 0;
 
     while (!queue.empty()) {
         auto vertexId = queue.top();
@@ -126,10 +139,11 @@ vector<float> WeightedGraph::dijkstra(int initialVertex, int destVertex)
 
         auto neighbors = getNeighbors(vertexId);
         for (auto neighborEdge : neighbors) {
-            if (dist[neighborEdge.neighbor] > dist[vertexId] + neighborEdge.weight)
+            float neighborDist = dist[neighborEdge.neighbor - 1];
+            if (neighborDist > dist[vertexId - 1] + neighborEdge.weight)
             {
-                auto newWeight = dist[vertexId] + neighborEdge.weight;
-                if (dist[neighborEdge.neighbor] == inf)
+                auto newWeight = dist[vertexId - 1] + neighborEdge.weight;
+                if (neighborDist == inf)
                 {
                     queue.push(newWeight, neighborEdge.neighbor);
                 }
@@ -137,7 +151,7 @@ vector<float> WeightedGraph::dijkstra(int initialVertex, int destVertex)
                 {
                     queue.decrease_key(neighborEdge.neighbor, newWeight);
                 }
-                dist[neighborEdge.neighbor] = newWeight;
+                dist[neighborEdge.neighbor - 1] = newWeight;
             }
         }
     }
