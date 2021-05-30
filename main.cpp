@@ -296,7 +296,11 @@ void timeEccentricity(WeightedGraph& graph, int iterations)
 void getMst(ostream& output, WeightedGraph& graph)
 {
     float weight = 0;
+	INIT_TIMER();
+	START_TIMER();
     auto mst = graph.mst(1, &weight);
+	STOP_TIMER();
+    PRINT_TIMER("Timing MST", 1);
     output << weight << endl;
-    WeightedGraph::printGraph(output, mst);
+    //WeightedGraph::printGraph(output, mst);
 }
