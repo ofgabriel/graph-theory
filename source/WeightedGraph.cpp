@@ -159,25 +159,25 @@ vector<float> WeightedGraph::dijkstra(int initialVertex, int destVertex)
     return dist;
 }
 
-float WeightedGraph::prim(int initialVertex, vector<pair<int, Edge>>& mst)
+vector<pair<int, Edge>> WeightedGraph::prim(int initialVertex, float* mstCost)
 {
-    float mstCost = 0;
+    auto mst = vector<pair<int, Edge>>(getGraphSize());
+
     const float inf = 10000000.0f;
     auto inMst = vector<bool>(getGraphSize());
-    auto cost = vector<double>(getGraphSize(), inf);
+    auto cost = vector<float>(getGraphSize(), inf);
     FibonacciQueue<float, int> queue;
     queue.push(0, initialVertex);
 
     while(!queue.empty())
     {
         auto edge = queue.topNode();
-        queue.pop();
-
         int vertexId = edge->payload;
         float weight = edge->key;
 
+        queue.pop();
+
         inMst[vertexId - 1] = true;
-        mstCost += weight;
         
         auto neighbors = getNeighbors(vertexId);
 		for (auto neighborEdge : neighbors)
@@ -199,21 +199,50 @@ float WeightedGraph::prim(int initialVertex, vector<pair<int, Edge>>& mst)
             }
 
             cost[neighborId - 1] = neighborEdge.weight;
-            mst[vertexId - 1] = make_pair(vertexId, newEdge);
+            mst[vertexId - 1] = {vertexId, newEdge};
 		}        
     }
     
-    for (int i = 0; i < getGraphSize(); i++)
-	{
-		if (cost[i] != inf)
-		{
-			mstCost += cost[i];
-		}
-	}
-    return mstCost;
+    if (mstCost != nullptr)
+    {
+        for (int i = 0; i < getGraphSize(); i++)
+        {
+            if (cost[i] != inf)
+            {
+                *mstCost += cost[i];
+            }
+        }
+    }
+    return mst;
 }
 
-float WeightedGraph::mst(int initialVertex, vector<pair<int, Edge>>& result)
+vector<pair<int, Edge>> WeightedGraph::mst(int initialVertex, float* mstCost, ostream* output)
 {
-    return prim(initialVertex, result);
+    auto mst = prim(initialVertex, mstCost);
+    if (output != nullptr)
+    {
+        WeightedGraph::printGraph(*output, mst);
+    }
+    return mst;
+}
+
+void WeightedGraph::printGraph(ostream& output, vector<pair<int, Edge>>& graph, LabelProvider *labelProvider)
+{
+    auto getLabel = [labelProvider](int vertex)
+    {
+        if (labelProvider == nullptr)
+        {
+            return to_string(vertex);
+        }
+        return labelProvider->getLabel(vertex);
+    };
+    output << graph.size() << endl;
+    for (auto edge : graph)
+    {
+        if (edge.first == 0)
+        {
+            continue;
+        }
+        output << getLabel(edge.first) << " " << getLabel(edge.second.neighbor) << " " << edge.second.weight << endl;
+    }
 }

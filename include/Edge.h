@@ -5,6 +5,12 @@ struct Edge
 	int neighbor;
 	float weight;
 
+	Edge()
+	{
+		this->neighbor = -1;
+		this->weight = -1;
+	}
+
 	Edge(int neighbor, float weight)
 	{
 		this->neighbor = neighbor;
