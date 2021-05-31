@@ -14,8 +14,8 @@ public:
     float getGraphDiameter() override;
     int getVerticeDegree(int nodeId) override;
     vector<pair<int, Edge>> mst(int initialVertex, float* mstCost, ostream* output = nullptr);
-
-    vector<float> dijkstra(int initialVertex, int destVertex);
+    list<int> getPath(int destVertex, vector<int> prev);
+    vector<float> dijkstra(int initialVertex, int destVertex, vector<int>*prev = nullptr);
 
     static void printGraph(ostream& output, vector<pair<int, Edge>>& graph, LabelProvider *labelProvider = nullptr);
     

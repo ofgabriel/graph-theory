@@ -20,6 +20,7 @@ int caseStudy(UnweightedGraph& graph);
 int weightedGraphCaseStudy(WeightedGraph& graph);
 int interactiveUsage(UnweightedGraph& graph);
 void getMst(ostream& output, WeightedGraph& graph);
+void distColab(ostream& output);
 
 int main(void) {
 	string path = "./assets/grafo_W_1.txt";
@@ -269,7 +270,9 @@ int weightedGraphCaseStudy(WeightedGraph& graph)
     timeEccentricity(graph, 100);
 
     getMst(cout, graph);
-
+  
+    distColab(cout);
+  
     return 0;
 }
 
@@ -302,4 +305,34 @@ void getMst(ostream& output, WeightedGraph& graph)
 	STOP_TIMER();
     PRINT_TIMER("Timing MST", 1);
     output << "MST Total weight: " << weight << endl;
+}
+
+void distColab(ostream& output)
+{
+	output << "Distancia de colaboradores" << endl;
+
+    WeightedGraph graph;
+    graph.loadGraphFromFilePath("assets/rede_colaboracao.txt");
+    auto labelProvider = LabelProvider("assets/rede_colaboracao_vertices.txt");
+	
+	auto dijkstra = labelProvider.getFromLabel("Edsger W. Dijkstra");
+    string labels[] = { "Alan M. Turing", "J. B. Kruskal", "Jon M. Kleinberg", "Éva Tardos", "Daniel R. Figueiredo" };
+	
+    vector<int> previous (graph.getGraphSize());
+    auto dist = graph.dijkstra(dijkstra, -1, &previous);
+
+	for (auto label : labels)
+	{
+		auto other = labelProvider.getFromLabel(label);
+
+		output << label << "\n";
+		output << "Distancia: " << dist[other - 1] << endl;
+        output << "Caminho: ";
+		for (int node : graph.getPath(other, previous))
+		{
+			output << labelProvider.getLabel(node) << ", ";
+		}
+		output << endl;
+		output << endl;
+	}
 }
