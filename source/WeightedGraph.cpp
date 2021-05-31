@@ -120,7 +120,7 @@ int WeightedGraph::getVerticeDegree(int nodeId)
     return verticesList_[nodeId - 1].size();
 }
 
-vector<float> WeightedGraph::dijkstra(int initialVertex, int destVertex)
+vector<float> WeightedGraph::dijkstra(int initialVertex, int destVertex, vector<int>*prev)
 {
     FibonacciQueue<float, int> queue;
     vector<float> dist(getGraphSize(), inf);
@@ -152,11 +152,26 @@ vector<float> WeightedGraph::dijkstra(int initialVertex, int destVertex)
                     queue.decrease_key(neighborEdge.neighbor, newWeight);
                 }
                 dist[neighborEdge.neighbor - 1] = newWeight;
+                if (prev != nullptr)
+                {
+                    (*prev)[neighborEdge.neighbor - 1] = vertexId;
+                }
             }
         }
     }
-
     return dist;
+}
+
+list<int> WeightedGraph::getPath(int destVertex, vector<int> prev)
+{
+    list<int> path;
+    int nodeId = destVertex;
+    while (nodeId != 0)
+    {
+        path.push_front(nodeId);
+        nodeId = prev[nodeId - 1];
+    }
+    return path;
 }
 
 float WeightedGraph::prim(int initialVertex, vector<pair<int, Edge>>& mst)

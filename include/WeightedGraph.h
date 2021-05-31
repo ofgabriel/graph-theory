@@ -14,8 +14,8 @@ public:
     float getGraphDiameter() override;
     int getVerticeDegree(int nodeId) override;
     float mst(int initialVertex, vector<pair<int, Edge>>& mst);
-
-    vector<float> dijkstra(int initialVertex, int destVertex);
+    list<int> getPath(int destVertex, vector<int> prev);
+    vector<float> dijkstra(int initialVertex, int destVertex, vector<int>*prev = nullptr);
 
 protected:
     void addVertex(int index) override;
