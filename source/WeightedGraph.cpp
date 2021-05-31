@@ -48,10 +48,20 @@ bool WeightedGraph::loadGraphFromFilePath(string filePath) {
 }
 
 void WeightedGraph::addEdge(int vertex1, int vertex2, float weight) {
-    graphEdgesNumber_++;
+    auto edge1 = Edge(vertex2, weight);
+    auto result = find_if(verticesList_[vertex1 - 1].begin(), verticesList_[vertex1 - 1].end(),
+        [&edge1](const auto& x)
+        {
+            return x.neighbor == edge1.neighbor;
+        });
 
-    verticesList_[vertex1 - 1].push_back(Edge(vertex2, weight));
+    if ((result != std::end(verticesList_[vertex1 - 1])))
+    {
+        return;
+    }
+    verticesList_[vertex1 - 1].push_back(edge1);
     verticesList_[vertex2 - 1].push_back(Edge(vertex1, weight));
+    graphEdgesNumber_++;
 }
 
 void WeightedGraph::sortVertices() {
