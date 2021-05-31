@@ -48,6 +48,10 @@ bool WeightedGraph::loadGraphFromFilePath(string filePath) {
 }
 
 void WeightedGraph::addEdge(int vertex1, int vertex2, float weight) {
+    if (vertex1 == vertex2)
+    {
+        return;
+    }
     auto edge1 = Edge(vertex2, weight);
     auto result = find_if(verticesList_[vertex1 - 1].begin(), verticesList_[vertex1 - 1].end(),
         [&edge1](const auto& x)
