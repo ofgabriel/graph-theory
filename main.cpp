@@ -19,6 +19,7 @@ void timeEccentricity(WeightedGraph& graph, int iterations);
 int caseStudy(UnweightedGraph& graph);
 int weightedGraphCaseStudy(WeightedGraph& graph);
 int interactiveUsage(UnweightedGraph& graph);
+void getMst(ostream& output, WeightedGraph& graph);
 void distColab(ostream& output);
 
 int main(void) {
@@ -268,8 +269,10 @@ int weightedGraphCaseStudy(WeightedGraph& graph)
 
     timeEccentricity(graph, 100);
 
-
+    getMst(cout, graph);
+  
     distColab(cout);
+  
     return 0;
 }
 
@@ -291,6 +294,17 @@ void timeEccentricity(WeightedGraph& graph, int iterations)
     
 	STOP_TIMER();
     PRINT_TIMER("Timing eccentricity", iterations);
+}
+
+void getMst(ostream& output, WeightedGraph& graph)
+{
+    float weight = 0;
+	INIT_TIMER();
+	START_TIMER();
+    auto mst = graph.mst(1, &weight, &output);
+	STOP_TIMER();
+    PRINT_TIMER("Timing MST", 1);
+    output << "MST Total weight: " << weight << endl;
 }
 
 void distColab(ostream& output)
