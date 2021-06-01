@@ -301,7 +301,7 @@ void getMst(ostream& output, WeightedGraph& graph)
     float weight = 0;
 	INIT_TIMER();
 	START_TIMER();
-    auto mst = graph.mst(1, &weight, &output);
+    auto mst = graph.mst(0, &weight, &output);
 	STOP_TIMER();
     PRINT_TIMER("Timing MST", 1);
     output << "MST Total weight: " << weight << endl;

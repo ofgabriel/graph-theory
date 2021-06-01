@@ -245,13 +245,83 @@ vector<pair<int, Edge>> WeightedGraph::prim(int initialVertex, float* mstCost)
     return mst;
 }
 
+vector<pair<int, Edge>> WeightedGraph::kruskal(float* mstCost)
+{
+	int resultId = 0;
+    auto mst = vector<pair<int, Edge>>(getGraphSize());
+
+    for (int i = 0; i < verticesList_.size(); i++) {
+		sort(verticesList_[i].begin(), verticesList_[i].end(), [](const Edge& a, const Edge& b) {
+			return a.weight < b.weight;
+		});
+	}
+
+    Subset* subsets = new Subset[(getGraphSize() * sizeof(Subset))];
+
+    for (int v = 0; v < getGraphSize(); v++) {
+        subsets[v].parent = v;
+        subsets[v].rank = 0;
+    }
+
+    int vertexId = 1;
+    int edgeId = 0;
+    int offset = 0;
+    vector<Edge>* edges = &verticesList_[vertexId - 1];
+
+    while (resultId < getGraphSize() && vertexId < graphEdgesNumber_) {
+        cout << "Result id: " << resultId << "\n";
+        cout << "Vertex id: " << resultId << "\n";
+        cout << "Graph size: " << getGraphSize() << "\n";
+
+        if (vertexId >= getGraphSize() - 1) {
+            int b = 0;
+        }
+
+        if (vertexId - offset >= edges->size()) {
+            vertexId++;
+            edges = &verticesList_[vertexId - 1];
+        }
+
+        auto e = (*edges);
+        if (e.size() == 0) {
+            continue;
+        }
+
+        auto a = vertexId - offset;
+        Edge nextEdge = e[a];
+        edgeId++;
+
+        int x = findSubset(subsets, vertexId - 1);
+        int y = findSubset(subsets, nextEdge.neighbor - 1);
+
+        cout << "X value: " << x << "\n";
+        cout << "Y value: " << y << "\n";
+
+        if (x != y) {
+            mst[resultId++] = make_pair(vertexId, nextEdge);
+            subsetsUnion(subsets, x, y);
+            *mstCost += nextEdge.weight;
+        }
+    }
+
+    return mst;
+}
+
 vector<pair<int, Edge>> WeightedGraph::mst(int initialVertex, float* mstCost, ostream* output)
 {
-    auto mst = prim(initialVertex, mstCost);
+    vector<pair<int, Edge>> mst;
+
+    if (initialVertex == 0) {
+        mst = kruskal(mstCost);
+    } else {
+        mst = prim(initialVertex, mstCost);
+    }
+
     if (output != nullptr)
     {
         WeightedGraph::printGraph(*output, mst);
     }
+
     return mst;
 }
 
@@ -274,4 +344,28 @@ void WeightedGraph::printGraph(ostream& output, vector<pair<int, Edge>>& graph, 
         }
         output << getLabel(edge.first) << " " << getLabel(edge.second.neighbor) << " " << edge.second.weight << endl;
     }
+}
+
+int WeightedGraph::findSubset(Subset subsets[], int i)
+{
+	if (subsets[i].parent != i) {
+		subsets[i].parent = findSubset(subsets, subsets[i].parent);
+    }
+
+	return subsets[i].parent;
+}
+
+void WeightedGraph::subsetsUnion(Subset subsets[], int x, int y)
+{
+	int xroot = findSubset(subsets, x);
+	int yroot = findSubset(subsets, y);
+
+	if (subsets[xroot].rank < subsets[yroot].rank) {
+		subsets[xroot].parent = yroot;
+    } else if (subsets[xroot].rank > subsets[yroot].rank) {
+		subsets[yroot].parent = xroot;
+    } else {
+		subsets[yroot].parent = xroot;
+		subsets[xroot].rank++;
+	}
 }

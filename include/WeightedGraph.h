@@ -28,7 +28,17 @@ protected:
     void setupGraphWithSize(int graphSize) override;
 
     vector<pair<int, Edge>> prim(int initialVertex, float* mstCost);
+    vector<pair<int, Edge>> kruskal(float* mstCost);
     
 private:
     vector<vector<Edge>> verticesList_;
+    class Subset
+	{
+	public:
+		unsigned int parent;
+		int rank;
+	};
+
+	int findSubset(Subset subsets[], int i);
+	void subsetsUnion(Subset subsets[], int x, int y);
 };
