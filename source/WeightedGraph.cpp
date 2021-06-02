@@ -250,8 +250,10 @@ vector<pair<int, Edge>> WeightedGraph::kruskal(float* mstCost)
 	int resultId = 0;
     auto mst = vector<pair<int, Edge>>(getGraphSize());
 
-    for (int i = 0; i < verticesList_.size(); i++) {
-		sort(verticesList_[i].begin(), verticesList_[i].end(), [](const Edge& a, const Edge& b) {
+    auto tempList = vector<vector<Edge>>(verticesList_);
+
+    for (int i = 0; i < tempList.size(); i++) {
+		sort(tempList[i].begin(), tempList[i].end(), [](const Edge& a, const Edge& b) {
 			return a.weight < b.weight;
 		});
 	}
@@ -266,20 +268,22 @@ vector<pair<int, Edge>> WeightedGraph::kruskal(float* mstCost)
     int vertexId = 1;
     int edgeId = 0;
     int offset = 0;
-    vector<Edge>* edges = &verticesList_[vertexId - 1];
+    vector<Edge>* edges = &tempList[vertexId - 1];
+
 
     while (resultId < getGraphSize() && vertexId < graphEdgesNumber_) {
+        cout << "------------------\n";
         cout << "Result id: " << resultId << "\n";
         cout << "Vertex id: " << resultId << "\n";
         cout << "Graph size: " << getGraphSize() << "\n";
+        cout << "Graph edges number: " << graphEdgesNumber_ << "\n";
+        cout << "Edge ID: " << edgeId << "\n";
+        cout << "Offset: " << offset << "\n";
 
-        if (vertexId >= getGraphSize() - 1) {
-            int b = 0;
-        }
-
-        if (vertexId - offset >= edges->size()) {
+        if (edgeId - offset >= edges->size()) {
             vertexId++;
-            edges = &verticesList_[vertexId - 1];
+            edges = &tempList[vertexId - 1];
+            offset = edgeId;
         }
 
         auto e = (*edges);
@@ -291,11 +295,11 @@ vector<pair<int, Edge>> WeightedGraph::kruskal(float* mstCost)
         Edge nextEdge = e[a];
         edgeId++;
 
+        cout << "Vertex ID - 1: " << vertexId - 1 << "\n";
+        cout << "Next edge neighbor - 1: " << nextEdge.neighbor - 1 << "\n";
+
         int x = findSubset(subsets, vertexId - 1);
         int y = findSubset(subsets, nextEdge.neighbor - 1);
-
-        cout << "X value: " << x << "\n";
-        cout << "Y value: " << y << "\n";
 
         if (x != y) {
             mst[resultId++] = make_pair(vertexId, nextEdge);
@@ -348,6 +352,9 @@ void WeightedGraph::printGraph(ostream& output, vector<pair<int, Edge>>& graph, 
 
 int WeightedGraph::findSubset(Subset subsets[], int i)
 {
+    cout << "I value: " << i << "\n";
+    cout << "Subset[i] value: " << subsets[i].parent << "\n";
+
 	if (subsets[i].parent != i) {
 		subsets[i].parent = findSubset(subsets, subsets[i].parent);
     }
