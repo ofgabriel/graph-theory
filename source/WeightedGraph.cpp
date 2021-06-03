@@ -262,7 +262,6 @@ vector<Edge> WeightedGraph::prim(int initialVertex, float* mstCost)
         {
             if (cost[i] != inf)
             {
-                //cout << cost[i] << endl; 
                 *mstCost += cost[i];
             }
         }
@@ -285,16 +284,6 @@ vector<Edge> WeightedGraph::kruskal(float* mstCost)
     for (auto edge : edgesList_) {
         int vertexId = edge.vertex1;
 
-        // cout << "------------------\n";
-        // cout << "Result id: " << resultId << "\n";
-        // cout << "Vertex id: " << vertexId << "\n";
-        // cout << "Graph size: " << getGraphSize() << "\n";
-        // cout << "Graph edges number: " << graphEdgesNumber_ << "\n";
-        // cout << "Edge ID: " << edgeId << "\n";
-
-        // cout << "Vertex ID - 1: " << vertexId - 1 << "\n";
-        // cout << "Next edge vertex2 - 1: " << edge.vertex2 - 1 << "\n";
-
         int x = findSubset(subsets, vertexId - 1);
         int y = findSubset(subsets, edge.getNeighbor(vertexId) - 1);
 
@@ -306,22 +295,6 @@ vector<Edge> WeightedGraph::kruskal(float* mstCost)
 
         edgeId++;
     }
-
-    // for (int i = 0; i < getGraphSize(); i++)
-    // {
-    //     for (int j = 0; j < getGraphSize(); j++)
-    //     {
-    //         int x = findSubset(subsets, i);
-    //         int y = findSubset(subsets, j);
-
-    //         if (x == y)
-    //         {
-    //             continue;
-    //         }
-
-
-    //     }
-    // }
 
     return forest;
 }
@@ -381,9 +354,9 @@ void WeightedGraph::subsetsUnion(Subset subsets[], int x, int y)
 
 	if (subsets[xroot].rank < subsets[yroot].rank) {
 		subsets[xroot].parent = yroot;
-    } else {//if (subsets[xroot].rank > subsets[yroot].rank) {
+    } else {
 		subsets[yroot].parent = xroot;
-    } //else {
+    }
     
     if (subsets[xroot].rank == subsets[yroot].rank) {
 		subsets[yroot].rank++;

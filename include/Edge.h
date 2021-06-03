@@ -35,24 +35,8 @@ public:
 		return (vertex2 < other.vertex2);
 	}
 
-	// bool operator > (const Edge& other) const
-	// {
-	//     return (weight > other.weight);
-	// }
-
 	bool operator==(const Edge &other) const
 	{
 		return (vertex2 == other.vertex2 && vertex1 == other.vertex1);
-	}
-
-	std::size_t operator()(const Edge& e) const
-	{
-		auto hashFunction = std::hash<int>();
-		const int multiplier = 17;
-		std::size_t hashcode = 1;
-		hashcode = multiplier * hashcode + hashFunction(e.vertex1);
-		hashcode = multiplier * hashcode + hashFunction(e.vertex2);
-		// hashcode = multiplier * hashcode + std::hash(e.weight);
-		return hashcode;
 	}
 };

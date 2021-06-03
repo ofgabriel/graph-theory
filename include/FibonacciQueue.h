@@ -94,15 +94,7 @@ public:
             return; // should not happen.
             
         m_ValueStore.erase(x->payload);
-        // auto range = m_ValueStore.equal_range(x->payload);
-        // auto mit = std::find_if(range.first, range.second,
-        //                         [x](const std::pair<TValue, Node *> &ele) {
-        //                             return ele.second == x;
-        //                         });
-        // if (mit != range.second)
-        //     m_ValueStore.erase(mit);
-        // else
-        //     std::cerr << "[Error]: value " << x->payload << " cannot be found in FiboQueue fast store\n";
+
         delete x;
     }
 
