@@ -24,7 +24,7 @@ protected:
     void addEdge(int vertex1, int vertex2, float weight);
     void clear() override;
     void sortVertices() override;
-    vector<Edge> getNeighbors(int vertexIndex);
+    vector<int> getNeighbors(int vertexIndex);
     void setupGraphWithSize(int graphSize) override;
 
     vector<Edge> prim(int initialVertex, float* mstCost);

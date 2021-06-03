@@ -6,20 +6,21 @@
 #include "Timing.h"
 
 using namespace std;
-floatveft=x1 numeric_limits<float>::max();
+float inf = numeric_limits<float>::max();
 
 WeightedGraph::WeightedGraph() : Graph()
 {
-    verticesList_ = vector<vector<Edge>>();
+    verticesList_ = vector<vector<int>>();
+    edgesList_ = vector<Edge>();
 }
-vetx1
+
 void WeightedGraph::clear()
 {
     verticesList_.clear();
+    edgesList_.clear();
 }
-vetx1
+
 bool WeightedGraph::loadGraphFromFilePath(string filePath) {
-    cleave;tx1vetx1
     ifstream file;
     int graphSize = 0;
     file.open(filePath);
@@ -36,7 +37,7 @@ bool WeightedGraph::loadGraphFromFilePath(string filePath) {
         addVertex(i);
         i++;
     }
-vetx1vetx1
+    
     int vertex1, vertex2;
     float edgeWeight;
     while (file >> vertex1 >> vertex2 >> edgeWeight) {
@@ -44,7 +45,7 @@ vetx1vetx1
     }
 
     sortVertices();
-    return true;vetx1
+    return true;
 }
 
 void WeightedGraph::addEdge(int vertex1, int vertex2, float weight) {
@@ -55,25 +56,17 @@ void WeightedGraph::addEdge(int vertex1, int vertex2, float weight) {
 
     for (int edgeId : verticesList_[vertex1 - 1])
     {
-        auto  e = edgesList_[edgeId]
-        if (e.vertex1 == vertex2 || e.vertex2 ==)
+        auto  e = edgesList_[edgeId];
+        if (e.vertex1 == vertex2)
+        {
+            return;
+        }
     }
     auto edge = Edge(vertex1, vertex2, weight);
 
-    // auto result = find_if(verticesList_[vertex1 - 1].begin(), verticesList_[vertex1 - 1].end(),
-    //     [&edge1](const auto& x)
-    //     {
-    //         return x.vertex2 == edge1.vertex2;
-    //     });
-
-    // if ((result != std::end(verticesList_[vertex1 - 1])))
-    // {
-    //     return;
-    // }
-
     edgesList_.push_back(edge);
-    verticesList_[vertex1 - 1].push_back(edgesList_.size());
-    verticesList_[vertex2 - 1].push_back(edgesList_.size());
+    verticesList_[vertex1 - 1].push_back(graphEdgesNumber_);
+    verticesList_[vertex2 - 1].push_back(graphEdgesNumber_);
     graphEdgesNumber_++;
 }
 
@@ -97,7 +90,7 @@ float WeightedGraph::getEccentricity(int nodeId)
     return maxDistance;
 }
 
-vector<Edge> WeightedGraph::getNeighbors(int vertexIndex)
+vector<int> WeightedGraph::getNeighbors(int vertexIndex)
 {
     return verticesList_[vertexIndex - 1];
 }
@@ -161,23 +154,26 @@ vector<float> WeightedGraph::dijkstra(int initialVertex, int destVertex, vector<
         }
 
         auto neighbors = getNeighbors(vertexId);
-        for (auto neighborEdge : neighbors) {
-            float neighborDist = dist[neighborEdge.vertex2 - 1];
+        for (auto neighborEdgeId : neighbors) {
+            auto neighborEdge = edgesList_[neighborEdgeId];
+            auto neighborId = neighborEdge.getNeighbor(vertexId);
+
+            float neighborDist = dist[neighborId - 1];
             if (neighborDist > dist[vertexId - 1] + neighborEdge.weight)
             {
                 auto newWeight = dist[vertexId - 1] + neighborEdge.weight;
                 if (neighborDist == inf)
                 {
-                    queue.push(newWeight, neighborEdge.vertex2);
+                    queue.push(newWeight, neighborId);
                 }
                 else
                 {
-                    queue.decrease_key(neighborEdge.vertex2, newWeight);
+                    queue.decrease_key(neighborId, newWeight);
                 }
-                dist[neighborEdge.vertex2 - 1] = newWeight;
+                dist[neighborId - 1] = newWeight;
                 if (prev != nullptr)
                 {
-                    (*prev)[neighborEdge.vertex2 - 1] = vertexId;
+                    (*prev)[neighborId - 1] = vertexId;
                 }
             }
         }
@@ -217,9 +213,10 @@ vector<Edge> WeightedGraph::prim(int initialVertex, float* mstCost)
         inMst[vertexId - 1] = true;
         
         auto neighbors = getNeighbors(vertexId);
-		for (auto neighborEdge : neighbors)
+		for (auto neighborEdgeId : neighbors)
         {
-            auto neighborId = neighborEdge.vertex2;
+            auto neighborEdge = edgesList_[neighborEdgeId];
+            auto neighborId = neighborEdge.getNeighbor(vertexId);
             if (inMst[neighborId - 1])
             {
                 continue;
@@ -228,7 +225,7 @@ vector<Edge> WeightedGraph::prim(int initialVertex, float* mstCost)
             auto newEdge = Edge(vertexId, neighborId, neighborEdge.weight);
             if (cost[neighborId - 1] == inf)
             {
-                queue.push(newEdge.weight, newEdge.vertex2);
+                queue.push(newEdge.weight, neighborId);
             }
             else if (cost[neighborId - 1] > neighborEdge.weight)
             {
@@ -237,7 +234,7 @@ vector<Edge> WeightedGraph::prim(int initialVertex, float* mstCost)
 
             cost[neighborId - 1] = neighborEdge.weight;
             mst[vertexId - 1] = newEdge;
-		}        
+		}
     }
     
     if (mstCost != nullptr)
@@ -261,7 +258,8 @@ vector<Edge> WeightedGraph::kruskal(float* mstCost)
     auto tempList = FibonacciQueue<float, Edge>();
     
     for (int i = 0; i < getGraphSize(); i++) {
-		for (auto edge : verticesList_[i]) {
+		for (auto edgeId : verticesList_[i]) {
+            auto edge = edgesList_[i];
             tempList.push(edge.weight, edge);
         }
 	}
