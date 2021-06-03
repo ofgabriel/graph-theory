@@ -3,16 +3,17 @@
 #include "FibonacciHeap.h"
 #include <unordered_map>
 #include <algorithm>
+#include <map>
 
-template <class TKey, class TValue, class TComp = std::less<TKey>>
+template <class TKey, class TValue, class TComp = std::less<TKey> >
 class FibonacciQueue : private FibonacciHeap<TKey, TValue, TComp>
 {
 private:
     using Heap = FibonacciHeap<TKey, TValue, TComp>;
     using Node = typename FibonacciHeap<TKey, TValue, TComp>::Node;
-    using ValueNodeIter = typename std::unordered_map<TValue, Node *>::iterator;
+    using ValueNodeIter = typename std::map<TValue, Node*>::iterator;
 
-    std::unordered_multimap<TValue, Node*> m_ValueStore;
+    std::map<TValue, Node*> m_ValueStore;
 
 public:
     FibonacciQueue()
@@ -23,7 +24,7 @@ public:
     FibonacciQueue(TComp comp)
         : Heap(comp)
     {
-        m_ValueStore = std::unordered_multimap<TValue, Node*>();
+        m_ValueStore = std::map<TValue, Node*>();
     }
 
     ~FibonacciQueue()
@@ -48,9 +49,7 @@ public:
 
     void decrease_key(Node*node, TKey k)
     {
-        ValueNodeIter mit = find(node->payload);
-        m_ValueStore.erase(mit);
-        m_ValueStore.insert({ node->payload, node });
+        m_ValueStore.insert_or_assign(node->payload, node);
         Heap::decrease_key(node, k);
     }
 
@@ -64,7 +63,7 @@ public:
     {
         Node *x = new Node(k, pl);
         Heap::insert(x);
-        m_ValueStore.insert({pl, x});
+        m_ValueStore.insert_or_assign(pl, x);
         return x;
     }
 
@@ -82,7 +81,7 @@ public:
 
     ValueNodeIter find(const TValue &k)
     {
-        ValueNodeIter mit = m_ValueStore.find(k);
+        auto mit = m_ValueStore.find(k);
         return mit;
     }
 
@@ -93,15 +92,17 @@ public:
         Node *x = Heap::extract_min();
         if (!x)
             return; // should not happen.
-        auto range = m_ValueStore.equal_range(x->payload);
-        auto mit = std::find_if(range.first, range.second,
-                                [x](const std::pair<TValue, Node *> &ele) {
-                                    return ele.second == x;
-                                });
-        if (mit != range.second)
-            m_ValueStore.erase(mit);
-        else
-            std::cerr << "[Error]: value " << x->payload << " cannot be found in FiboQueue fast store\n";
+            
+        m_ValueStore.erase(x->payload);
+        // auto range = m_ValueStore.equal_range(x->payload);
+        // auto mit = std::find_if(range.first, range.second,
+        //                         [x](const std::pair<TValue, Node *> &ele) {
+        //                             return ele.second == x;
+        //                         });
+        // if (mit != range.second)
+        //     m_ValueStore.erase(mit);
+        // else
+        //     std::cerr << "[Error]: value " << x->payload << " cannot be found in FiboQueue fast store\n";
         delete x;
     }
 
