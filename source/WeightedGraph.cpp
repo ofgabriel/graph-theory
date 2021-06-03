@@ -82,13 +82,11 @@ void WeightedGraph::addEdge(int vertex1, int vertex2, float weight) {
 void WeightedGraph::buildVerticesList()
 {
     int edgeIndex = 0;
-    for (auto v : verticesList_)
+    for (int i = 0; i < getGraphSize(); i++)
     {
-        v.clear();
+        verticesList_[i].clear();
     }
-
     for (auto edge : edgesList_) {
-        // cout << "Weight value: " << edge.weight << "\n";
         this->verticesList_[edge.vertex1 - 1].push_back(edgeIndex);
         this->verticesList_[edge.vertex2 - 1].push_back(edgeIndex);
         edgeIndex++;
@@ -167,8 +165,6 @@ vector<float> WeightedGraph::dijkstra(int initialVertex, int destVertex, vector<
     FibonacciQueue<float, int> queue;
     vector<float> dist(getGraphSize(), inf);
 
-    cout << "Graph size: " << getGraphSize() << "\n";
-    cout << "Index: " << initialVertex << "\n";
     queue.push(0, initialVertex);
     dist[initialVertex - 1] = 0;
 
