@@ -20,7 +20,8 @@ void WeightedGraph::clear()
     edgesList_.clear();
 }
 
-bool WeightedGraph::loadGraphFromFilePath(string filePath) {
+bool WeightedGraph::loadGraphFromFilePath(string filePath)
+{
     ifstream file;
     int graphSize = 0;
     file.open(filePath);
@@ -40,12 +41,20 @@ bool WeightedGraph::loadGraphFromFilePath(string filePath) {
     
     int vertex1, vertex2;
     float edgeWeight;
+    
     while (file >> vertex1 >> vertex2 >> edgeWeight) {
         addEdge(vertex1, vertex2, edgeWeight);
     }
 
-    sortVertices();
+    sort(edgesList_.begin(), edgesList_.end(), compareEdge);
+    buildVerticesList();
+
     return true;
+}
+
+bool WeightedGraph::compareEdge(Edge a, Edge b)
+{
+    return (a.weight < b.weight);
 }
 
 void WeightedGraph::addEdge(int vertex1, int vertex2, float weight) {
@@ -70,7 +79,24 @@ void WeightedGraph::addEdge(int vertex1, int vertex2, float weight) {
     graphEdgesNumber_++;
 }
 
-void WeightedGraph::sortVertices() {
+void WeightedGraph::buildVerticesList()
+{
+    int edgeIndex = 0;
+    for (auto v : verticesList_)
+    {
+        v.clear();
+    }
+
+    for (auto edge : edgesList_) {
+        // cout << "Weight value: " << edge.weight << "\n";
+        this->verticesList_[edge.vertex1 - 1].push_back(edgeIndex);
+        this->verticesList_[edge.vertex2 - 1].push_back(edgeIndex);
+        edgeIndex++;
+    }
+}
+
+void WeightedGraph::sortVertices()
+{
     for (int i = 0; i < getGraphSize(); i++) {
         sort(verticesList_[i].begin(), verticesList_[i].end());
     }
@@ -121,7 +147,7 @@ float WeightedGraph::getGraphDiameter()
         for (auto d : dist)
         {
             if (d > diameter && d != inf)
-{
+            {
                 diameter = d;
                 STOP_TIMER();
                 PRINT_TIMER("Found bigger diameter: " << diameter, 1);
@@ -141,6 +167,8 @@ vector<float> WeightedGraph::dijkstra(int initialVertex, int destVertex, vector<
     FibonacciQueue<float, int> queue;
     vector<float> dist(getGraphSize(), inf);
 
+    cout << "Graph size: " << getGraphSize() << "\n";
+    cout << "Index: " << initialVertex << "\n";
     queue.push(0, initialVertex);
     dist[initialVertex - 1] = 0;
 
@@ -197,7 +225,6 @@ vector<Edge> WeightedGraph::prim(int initialVertex, float* mstCost)
 {
     auto mst = vector<Edge>(getGraphSize());
 
-    const float inf = 10000000.0f;
     auto inMst = vector<bool>(getGraphSize());
     auto cost = vector<float>(getGraphSize(), inf);
     FibonacciQueue<float, int> queue;
@@ -205,9 +232,7 @@ vector<Edge> WeightedGraph::prim(int initialVertex, float* mstCost)
 
     while(!queue.empty())
     {
-        auto edge = queue.topNode();
-        int vertexId = edge->payload;
-        float weight = edge->key;
+        int vertexId = queue.top();
         queue.pop();
 
         inMst[vertexId - 1] = true;
@@ -217,23 +242,21 @@ vector<Edge> WeightedGraph::prim(int initialVertex, float* mstCost)
         {
             auto neighborEdge = edgesList_[neighborEdgeId];
             auto neighborId = neighborEdge.getNeighbor(vertexId);
-            if (inMst[neighborId - 1])
-            {
-                continue;
-            }
 
-            auto newEdge = Edge(vertexId, neighborId, neighborEdge.weight);
-            if (cost[neighborId - 1] == inf)
+            if (inMst[neighborId - 1] == false && cost[neighborId - 1] > neighborEdge.weight)
             {
-                queue.push(newEdge.weight, neighborId);
+                auto newEdge = Edge(vertexId, neighborId, neighborEdge.weight);
+                if (cost[neighborId - 1] == inf)
+                {
+                    queue.push(newEdge.weight, neighborId);
+                }
+                else
+                {
+                    queue.decrease_key(neighborId, neighborEdge.weight);
+                }
+                cost[neighborId - 1] = neighborEdge.weight;
+                mst[vertexId - 1] = newEdge;
             }
-            else if (cost[neighborId - 1] > neighborEdge.weight)
-            {
-                queue.decrease_key(neighborId, neighborEdge.weight);
-            }
-
-            cost[neighborId - 1] = neighborEdge.weight;
-            mst[vertexId - 1] = newEdge;
 		}
     }
     
@@ -243,6 +266,7 @@ vector<Edge> WeightedGraph::prim(int initialVertex, float* mstCost)
         {
             if (cost[i] != inf)
             {
+                //cout << cost[i] << endl; 
                 *mstCost += cost[i];
             }
         }
@@ -253,18 +277,8 @@ vector<Edge> WeightedGraph::prim(int initialVertex, float* mstCost)
 vector<Edge> WeightedGraph::kruskal(float* mstCost)
 {
 	int resultId = 0;
-    auto mst = vector<Edge>(getGraphSize());
-
-    auto tempList = FibonacciQueue<float, Edge>();
-    
-    for (int i = 0; i < getGraphSize(); i++) {
-		for (auto edgeId : verticesList_[i]) {
-            auto edge = edgesList_[i];
-            tempList.push(edge.weight, edge);
-        }
-	}
-
-    Subset* subsets = new Subset[(getGraphSize() * sizeof(Subset))];
+    auto forest = vector<Edge>(getGraphSize());
+    Subset* subsets = new Subset[forest.size()];
 
     for (int v = 0; v < getGraphSize(); v++) {
         subsets[v].parent = v;
@@ -272,26 +286,24 @@ vector<Edge> WeightedGraph::kruskal(float* mstCost)
     }
 
     int edgeId = 0;
-    while (!tempList.empty()) {
-        Edge edge = tempList.top();
+    for (auto edge : edgesList_) {
         int vertexId = edge.vertex1;
-        tempList.pop();
 
-        cout << "------------------\n";
-        cout << "Result id: " << resultId << "\n";
-        cout << "Vertex id: " << vertexId << "\n";
-        cout << "Graph size: " << getGraphSize() << "\n";
-        cout << "Graph edges number: " << graphEdgesNumber_ << "\n";
-        cout << "Edge ID: " << edgeId << "\n";
+        // cout << "------------------\n";
+        // cout << "Result id: " << resultId << "\n";
+        // cout << "Vertex id: " << vertexId << "\n";
+        // cout << "Graph size: " << getGraphSize() << "\n";
+        // cout << "Graph edges number: " << graphEdgesNumber_ << "\n";
+        // cout << "Edge ID: " << edgeId << "\n";
 
-        cout << "Vertex ID - 1: " << vertexId - 1 << "\n";
-        cout << "Next edge vertex2 - 1: " << edge.vertex2 - 1 << "\n";
+        // cout << "Vertex ID - 1: " << vertexId - 1 << "\n";
+        // cout << "Next edge vertex2 - 1: " << edge.vertex2 - 1 << "\n";
 
         int x = findSubset(subsets, vertexId - 1);
-        int y = findSubset(subsets, edge.vertex2 - 1);
+        int y = findSubset(subsets, edge.getNeighbor(vertexId) - 1);
 
         if (x != y) {
-            mst[resultId++] = edge;
+            forest[resultId++] = edge;
             subsetsUnion(subsets, x, y);
             *mstCost += edge.weight;
         }
@@ -299,7 +311,23 @@ vector<Edge> WeightedGraph::kruskal(float* mstCost)
         edgeId++;
     }
 
-    return mst;
+    // for (int i = 0; i < getGraphSize(); i++)
+    // {
+    //     for (int j = 0; j < getGraphSize(); j++)
+    //     {
+    //         int x = findSubset(subsets, i);
+    //         int y = findSubset(subsets, j);
+
+    //         if (x == y)
+    //         {
+    //             continue;
+    //         }
+
+
+    //     }
+    // }
+
+    return forest;
 }
 
 vector<Edge> WeightedGraph::mst(int initialVertex, float* mstCost, ostream* output)
@@ -357,10 +385,11 @@ void WeightedGraph::subsetsUnion(Subset subsets[], int x, int y)
 
 	if (subsets[xroot].rank < subsets[yroot].rank) {
 		subsets[xroot].parent = yroot;
-    } else if (subsets[xroot].rank > subsets[yroot].rank) {
+    } else {//if (subsets[xroot].rank > subsets[yroot].rank) {
 		subsets[yroot].parent = xroot;
-    } else {
-		subsets[yroot].parent = xroot;
-		subsets[xroot].rank++;
+    } //else {
+    
+    if (subsets[xroot].rank == subsets[yroot].rank) {
+		subsets[yroot].rank++;
 	}
 }

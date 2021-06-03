@@ -3,6 +3,7 @@
 #include "Graph.h"
 #include "Edge.h"
 #include <vector>
+#include <set>
 
 class WeightedGraph: public Graph
 {
@@ -24,6 +25,8 @@ protected:
     void addEdge(int vertex1, int vertex2, float weight);
     void clear() override;
     void sortVertices() override;
+    void buildVerticesList();
+    static bool compareEdge(Edge a, Edge b);
     vector<int> getNeighbors(int vertexIndex);
     void setupGraphWithSize(int graphSize) override;
 
