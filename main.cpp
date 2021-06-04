@@ -43,7 +43,7 @@ int main(void) {
 
         graph = new WeightedGraph();
 
-        graph->loadGraphFromFilePath("./assets/grafo_W_1.txt");
+        graph->loadGraphFromFilePath(path);
 
         if (executionMode == 1) {
             return weightedGraphCaseStudy(*graph);
@@ -312,8 +312,8 @@ void distColab(ostream& output)
 	output << "Distancia de colaboradores" << endl;
 
     WeightedGraph graph;
-    graph.loadGraphFromFilePath("assets/rede_colaboracao.txt");
-    auto labelProvider = LabelProvider("assets/rede_colaboracao_vertices.txt");
+    graph.loadGraphFromFilePath("./assets/rede_colaboracao.txt");
+    auto labelProvider = LabelProvider("./assets/rede_colaboracao_vertices.txt");
 	
 	auto dijkstra = labelProvider.getFromLabel("Edsger W. Dijkstra");
     string labels[] = { "Alan M. Turing", "J. B. Kruskal", "Jon M. Kleinberg", "Éva Tardos", "Daniel R. Figueiredo" };

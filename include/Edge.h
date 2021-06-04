@@ -1,29 +1,42 @@
 #pragma once
 
+#include <functional>
+
+using namespace std;
+
 struct Edge
 {
-	int neighbor;
+public:
+	int vertex1;
+	int vertex2;
 	float weight;
 
 	Edge()
 	{
-		this->neighbor = -1;
+		this->vertex1 = -1;
+		this->vertex2 = -1;
 		this->weight = -1;
 	}
 
-	Edge(int neighbor, float weight)
+	Edge(int vertex1, int vertex2, float weight)
 	{
-		this->neighbor = neighbor;
+		this->vertex1 = vertex1;
+		this->vertex2 = vertex2;
 		this->weight = weight;
 	}
 
-    bool operator < (const Edge& other) const
-    {
-        return (neighbor < other.neighbor);
-    }
+	int getNeighbor(int vertex)
+	{
+		return vertex1 == vertex ? vertex2 : vertex1;
+	}
 
-    bool operator > (const Edge& other) const
-    {
-        return (weight > other.weight);
-    }
+	bool operator<(const Edge &other) const
+	{
+		return (vertex2 < other.vertex2);
+	}
+
+	bool operator==(const Edge &other) const
+	{
+		return (vertex2 == other.vertex2 && vertex1 == other.vertex1);
+	}
 };

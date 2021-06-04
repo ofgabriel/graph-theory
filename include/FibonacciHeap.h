@@ -36,7 +36,8 @@ public:
         TValue payload;
     };
 
-    FibonacciHeap() : FibonacciHeap(std::less<TKey>())
+    FibonacciHeap() 
+        : FibonacciHeap(TComp())
     {
     }
 
