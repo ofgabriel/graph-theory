@@ -19,22 +19,17 @@ void timeEccentricity(WeightedGraph& graph, int iterations);
 int caseStudy(UnweightedGraph& graph);
 int weightedGraphCaseStudy(WeightedGraph& graph);
 int interactiveUsage(UnweightedGraph& graph);
-void getMst(ostream& output, WeightedGraph& graph);
+void getMst(WeightedGraph& graph);
 void distColab(ostream& output);
 
 int main(void) {
-	string path = "./assets/grafo_W_1.txt";
+	string path;
     int executionMode;
 	int dataStructure;
     int graphType;
 
-	// cout << "Type the graph file path\n";
-	// cin >> path;
-
-    cout << "Pick an execution mode:\n";
-	cout << "	1 - Case studies;\n";
-	cout << "	2 - Interactive library;\n";
-	cin >> executionMode;
+	cout << "Type the graph file path\n";
+	cin >> path;
 
     bool isWeightedGraph = Graph::isWeightedGraph(path);
 
@@ -45,12 +40,13 @@ int main(void) {
 
         graph->loadGraphFromFilePath(path);
 
-        if (executionMode == 1) {
-            return weightedGraphCaseStudy(*graph);
-        }
-
-        return 0;
+        return weightedGraphCaseStudy(*graph);
     }
+
+    cout << "Pick an execution mode:\n";
+	cout << "	1 - Case studies;\n";
+	cout << "	2 - Interactive library;\n";
+	cin >> executionMode;
 
 	cout << "Pick a structure for representing your graph:\n";
 	cout << "	1 - Adjacency list;\n";
@@ -269,7 +265,7 @@ int weightedGraphCaseStudy(WeightedGraph& graph)
 
     timeEccentricity(graph, 100);
 
-    getMst(cout, graph);
+    getMst(graph);
   
     distColab(cout);
   
@@ -296,15 +292,18 @@ void timeEccentricity(WeightedGraph& graph, int iterations)
     PRINT_TIMER("Timing eccentricity", iterations);
 }
 
-void getMst(ostream& output, WeightedGraph& graph)
+void getMst(WeightedGraph& graph)
 {
+    ofstream output;
+    output.open("mst.txt");
+
     float weight = 0;
 	INIT_TIMER();
 	START_TIMER();
     auto mst = graph.mst(1, &weight, &output);
 	STOP_TIMER();
     PRINT_TIMER("Timing MST", 1);
-    output << "MST Total weight: " << weight << endl;
+    cout << "MST Total weight: " << weight << endl;
 }
 
 void distColab(ostream& output)

@@ -311,30 +311,31 @@ vector<Edge> WeightedGraph::mst(int initialVertex, float* mstCost, ostream* outp
 
     if (output != nullptr)
     {
-        WeightedGraph::printGraph(*output, mst);
+        int mstCount = 0;
+        (*output) << "Peso total da MST: " << (*mstCost) << endl; 
+        for (int i = 0; i < mst.size(); i++)
+        {
+            if (mst[i].vertex1 != -1)
+            {
+                mstCount++;
+            }
+        }
+        WeightedGraph::printGraph(*output, mstCount, mst);
     }
 
     return mst;
 }
 
-void WeightedGraph::printGraph(ostream& output, vector<Edge>& graph, LabelProvider *labelProvider)
+void WeightedGraph::printGraph(ostream& output, int graphSize, vector<Edge>& graph)
 {
-    auto getLabel = [labelProvider](int vertex)
-    {
-        if (labelProvider == nullptr)
-        {
-            return to_string(vertex);
-        }
-        return labelProvider->getLabel(vertex);
-    };
-    output << graph.size() << endl;
+    output << graphSize << endl;
     for (auto edge : graph)
     {
-        if (edge.vertex1 == 0)
+        if (edge.vertex1 == -1)
         {
             continue;
         }
-        output << getLabel(edge.vertex1) << " " << getLabel(edge.vertex2) << " " << edge.weight << endl;
+        output << edge.vertex1 << " " << edge.vertex2 << " " << edge.weight << endl;
     }
 }
 

@@ -18,7 +18,7 @@ public:
     list<int> getPath(int destVertex, vector<int> prev);
     vector<float> dijkstra(int initialVertex, int destVertex, vector<int>*prev = nullptr);
 
-    static void printGraph(ostream& output, vector<Edge>& graph, LabelProvider *labelProvider = nullptr);
+    static void printGraph(ostream& output, int graphSize, vector<Edge>& graph);
     
 protected:
     void addVertex(int index) override;
